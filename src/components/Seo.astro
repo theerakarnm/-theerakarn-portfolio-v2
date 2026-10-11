@@ -41,6 +41,7 @@ const ogImageAlt = `${person.name.en} (${person.name.th}) - Showreel`;
 <meta name="twitter:title" content={seo.title} />
 <meta name="twitter:description" content={seo.description} />
 <meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image:alt" content={ogImageAlt} />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link
@@ -50,13 +51,17 @@ const ogImageAlt = `${person.name.en} (${person.name.th}) - Showreel`;
   href="/fonts/anuphan-400-latin.woff2"
   crossorigin
 />
-<link
-  rel="preload"
-  as="font"
-  type="font/woff2"
-  href="/fonts/anuphan-400-thai.woff2"
-  crossorigin
-/>
+{
+  lang === 'th' && (
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/anuphan-400-thai.woff2"
+      crossorigin
+    />
+  )
+}
 <script
   type="application/ld+json"
   set:html={JSON.stringify(jsonLd(lang)).replaceAll('<', '\\u003c')}
