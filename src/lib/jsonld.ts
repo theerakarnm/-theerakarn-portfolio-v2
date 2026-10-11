@@ -4,7 +4,6 @@ import { absoluteUrl } from './i18n';
 const personId = `${SITE_URL}/#person`;
 const orgId = `${SITE_URL}/#org`;
 const websiteId = `${SITE_URL}/#website`;
-const profileId = `${SITE_URL}/#profile`;
 
 const inLanguage: Record<Lang, string> = { th: 'th-TH', en: 'en-US' };
 
@@ -28,7 +27,7 @@ export function jsonLd(lang: Lang): {
         jobTitle: person.jobTitle[lang],
         description: person.description[lang],
         worksFor: { '@id': orgId },
-        url: absoluteUrl(lang),
+        url: `${SITE_URL}/`,
         image: `${SITE_URL}/og.png`,
         email: person.email.map((address) => `mailto:${address}`),
         sameAs: person.sameAs,
@@ -53,7 +52,7 @@ export function jsonLd(lang: Lang): {
       },
       {
         '@type': 'ProfilePage',
-        '@id': profileId,
+        '@id': `${absoluteUrl(lang)}#profile`,
         url: absoluteUrl(lang),
         inLanguage: inLanguage[lang],
         isPartOf: { '@id': websiteId },
