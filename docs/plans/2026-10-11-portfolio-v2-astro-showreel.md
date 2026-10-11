@@ -89,8 +89,8 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 **Gotcha:** `postbuild` is NOT declared here. Task 16 adds it together with `scripts/precompress.ts`, so every commit builds. All other scripts may point at not-yet-existing files because nothing calls them before their owning task.
 
 **Steps:**
-- [ ] Step 1: `bun init -y` is NOT used. Write `package.json` with `"type": "module"`, `"private": true`, the scripts above (without `postbuild`), then run `bun add astro @astrojs/sitemap gsap lenis` and `bun add -d @biomejs/biome @astrojs/check typescript @playwright/test pixelmatch pngjs @types/pngjs @types/bun`.
-- [ ] Step 2: Write `astro.config.mjs`:
+- [x] Step 1: `bun init -y` is NOT used. Write `package.json` with `"type": "module"`, `"private": true`, the scripts above (without `postbuild`), then run `bun add astro @astrojs/sitemap gsap lenis` and `bun add -d @biomejs/biome @astrojs/check typescript @playwright/test pixelmatch pngjs @types/pngjs @types/bun`.
+- [x] Step 2: Write `astro.config.mjs`:
       ```js
       import sitemap from '@astrojs/sitemap';
       import { defineConfig } from 'astro/config';
@@ -106,10 +106,10 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
         integrations: [sitemap({ i18n: { defaultLocale: 'th', locales: { th: 'th-TH', en: 'en-US' } } })],
       });
       ```
-- [ ] Step 3: `bunx biome init`, then edit `biome.json`: formatter indent 2 spaces, single quotes, `files.includes` excludes `dist`, `reference`, `public`, `.astro`, `test-results`.
-- [ ] Step 4: `.gitignore`: `node_modules`, `dist`, `.astro`, `test-results`, `playwright-report`, `tests/parity/.out`.
-- [ ] Step 5: Verify - Run: `bunx astro --version && bunx biome check .` - Expected: prints an Astro version, Biome exits 0.
-- [ ] Step 6: Commit - `git commit -m "chore: scaffold astro project with bun and biome"`
+- [x] Step 3: `bunx biome init`, then edit `biome.json`: formatter indent 2 spaces, single quotes, `files.includes` excludes `dist`, `reference`, `public`, `.astro`, `test-results`.
+- [x] Step 4: `.gitignore`: `node_modules`, `dist`, `.astro`, `test-results`, `playwright-report`, `tests/parity/.out`.
+- [x] Step 5: Verify - Run: `bunx astro --version && bunx biome check .` - Expected: prints an Astro version, Biome exits 0.
+- [x] Step 6: Commit - `git commit -m "chore: scaffold astro project with bun and biome"`
 
 #### Task 2: Unpack the reference into `reference/` and `public/fonts/`
 
