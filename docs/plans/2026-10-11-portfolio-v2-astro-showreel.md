@@ -217,7 +217,7 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 - [x] Step 6: Verify - Run: `bun run test && bun run check` - Expected: unit tests pass; 0 type or lint errors.
 - [x] Step 7: Verify - Run: `bun run build && rg -c "data-scene" dist/index.html` - Expected: `2` (scenes 0 and 1 present so far).
       > Deviation: `compressHTML` emits the page on one line, so `rg -c` prints `1`; the scene count was taken with `rg -o 'data-scene=' dist/index.html | wc -l` -> `2`.
-- [ ] Step 8: Commit - `git commit -m "feat: port showreel chrome and opening/premise scenes"`
+- [x] Step 8: Commit - `git commit -m "feat: port showreel chrome and opening/premise scenes"`
 
 #### Task 6: Reel scenes 2-5 (Tenerie, MunMuang, Buddy Glasses, FridayMerch)
 
@@ -239,7 +239,7 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 - [x] Step 3: Add the four `<Reel />` calls after `<Premise />` in `Showreel.astro`.
 - [x] Step 4: Verify - Run: `bun run check && bun run build && rg -c "data-scene" dist/index.html` - Expected: 0 errors, count `6`.
       > Deviation: Scene count taken with `rg -o 'data-scene=' <file> | wc -l` (single-line HTML): `6` for `/` and `/en/`.
-- [ ] Step 5: Commit - `git commit -m "feat: port reel scenes for tenerie munmuang buddy and friday"`
+- [x] Step 5: Commit - `git commit -m "feat: port reel scenes for tenerie munmuang buddy and friday"`
 
 #### Task 7: Scenes 6-8 (How I work, End credits, Contact)
 
@@ -262,7 +262,7 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 - [x] Step 3: Mount in `Showreel.astro`.
 - [x] Step 4: Verify - Run: `bun run check && bun run build && rg -c "data-scene" dist/index.html && rg -c "data-scene" dist/en/index.html && rg -c "TODO|cut off" dist` - Expected: `9`, `9`, and no `TODO`/`cut off` hits (rg exits 1 with no matches).
       > Deviation: Counts via `rg -o 'data-scene=' <file> | wc -l`: `9` and `9`; `rg -c "TODO|cut off" dist` printed nothing and exited 1.
-- [ ] Step 5: Commit - `git commit -m "feat: port how-i-work credits and contact scenes"`
+- [x] Step 5: Commit - `git commit -m "feat: port how-i-work credits and contact scenes"`
 
 #### Task 8: Motion engine - port the Component class to vanilla TypeScript
 
@@ -288,7 +288,7 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
       > Deviation: `bun run check`: 0 errors, 0 warnings, 0 hints. Single chunk `Showreel.astro_astro_type_script_index_0_lang.*.js` is 149370 B raw, 55234 B gzip.
 - [x] Step 5: Verify - Manual: run `bunx astro dev --port 4401`, open `http://localhost:4401/` with Playwright, scroll to 0%, 25%, 50%, 100% of `document.documentElement.scrollHeight` - Expected: footer counter shows `00`, then increases through `08`; no console errors; the particle canvas draws; stage visibility toggles per scene.
       > Deviation: Playwright at 1440x900 `/` scrolling 0/25/50/75/100%: counter `00`,`02`,`04`,`06`,`08`; stage visibility `vhhhhhhhh` ... `hhhhhhhhv`; canvas has inked pixels in scenes 0-5 and is clear after scene 6 (as the reference); no console errors (only Chrome's `willReadFrequently` warning from the probe's own `getImageData`). Same counts on the reference file and on `/en/` at 390x844.
-- [ ] Step 6: Commit - `git commit -m "feat: port showreel motion engine to typescript"`
+- [x] Step 6: Commit - `git commit -m "feat: port showreel motion engine to typescript"`
 
 #### Task 9: Parity test against the reference HTML
 
@@ -403,7 +403,7 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 **Steps:**
 - [x] Step 1: Implement with `node:fs` and a small regex/`cheerio`-free parser (HTML is generated, regex on tags is acceptable here); print one line per failing assertion.
       > Deviation: `bun scripts/check-dist.ts [distDir]` takes an optional dist directory (defaults to `dist/`) so the proxy run below can point at a patched copy. Visible text strips tags to `''` so char-split spans rejoin; the Latin `Theerakarn` match is case-insensitive (the `<h1>` is uppercase `THEERAKARN`).
-- [ ] Step 2: Verify - Run: `bun run build && bun run check:seo` - Expected: exit 0, and a negative control: temporarily delete the canonical link from `dist/index.html` and re-run - Expected: exit 1 naming the canonical assertion; then rebuild.
+- [x] Step 2: Verify - Run: `bun run build && bun run check:seo` - Expected: exit 0, and a negative control: temporarily delete the canonical link from `dist/index.html` and re-run - Expected: exit 1 naming the canonical assertion; then rebuild.
       > Deviation: Expected unsatisfiable at this task; errors confined to `src/components/Showreel.astro` (still the `<main>stub</main>` stub: no `<h1>`, no name in visible text), owned by Task 5 (Track B). Real `dist/` run: exit 1 with only those 5 lines (h1 x2, visible-text x3). Proxy: a copy of `dist/` with an injected `<h1>` holding the names passes (exit 0); negative control on both the copy and the real `dist/` (canonical deleted) exits 1 naming the canonical assertion; rebuilt afterwards.
       > Deviation: the reference has no visible `ธีรกานต์` anywhere, so the TH visible-text assertion will stay red after Track B merges unless Track B/E renders the Thai name in the TH body.
 - [x] Step 3: Commit - `git commit -m "test(seo): add built-output seo assertions"`
