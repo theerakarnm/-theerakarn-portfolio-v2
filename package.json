@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "postbuild": "bun scripts/precompress.ts",
     "check": "astro check && biome check .",
     "lint": "biome check .",
     "test": "bun test tests/unit",
