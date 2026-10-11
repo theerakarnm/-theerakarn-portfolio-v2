@@ -1,5 +1,5 @@
 ---
-import type { Lang } from '../../content/site';
+import { type Lang, person } from '../../content/site';
 import Split from '../Split.astro';
 
 interface Props {
@@ -16,7 +16,7 @@ const th = lang === 'th';
   <div data-film style="position:absolute;left:4vw;right:4vw;top:40%;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:clamp(13px,1.3vw,18px);letter-spacing:.3em;text-transform:uppercase;opacity:0"><span data-l={lang}>{th ? 'Planthia Tech Co., Ltd. นำเสนอ' : 'Planthia Tech Co., Ltd. presents'}</span></div>
   <div data-film style="position:absolute;left:4vw;right:4vw;top:40%;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:clamp(13px,1.3vw,18px);letter-spacing:.3em;text-transform:uppercase;opacity:0"><span data-l={lang}>{th ? 'โชว์รีลของคนสร้างโปรดักต์หนึ่งคน' : 'A showreel about one builder'}</span></div>
   <div style="position:absolute;left:4vw;right:4vw;bottom:13vh;display:flex;flex-direction:column;gap:clamp(14px,2vw,28px)">
-    <h1 data-name style="margin:0;font-weight:700;font-size:clamp(50px,13.5vw,250px);line-height:.86;letter-spacing:-.035em;color:transparent;-webkit-text-stroke:1.5px #111">
+    <h1 data-name aria-label={person.name.en} style="margin:0;font-weight:700;font-size:clamp(50px,13.5vw,250px);line-height:.86;letter-spacing:-.035em;color:transparent;-webkit-text-stroke:1.5px #111">
       <span data-name-line style="display:block"><Split text="THEERAKARN" mode="char" /></span>
       <span data-name-line style="display:block"><Split text="MAIWONG" mode="char" /></span>
     </h1>
