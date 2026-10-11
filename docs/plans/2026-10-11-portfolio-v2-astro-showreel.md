@@ -254,10 +254,14 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 **Gotcha:** The credits roll (`data-roll`) is a long text block (Starring as, Now, Previously, Cast, Production, Thailand, Featuring, Find me). It is real content and stays in the DOM as semantic text (use `<h2>` for the scene heading and definition-like markup that still looks identical). The EN "Design it, then build it" description is fixed per Global Constraints. The contact buttons carry `class="btn"` with the hover colours that `style-hover` defined in the template.
 
 **Steps:**
-- [ ] Step 1: Port `id="s6"`, `id="s7"`, `id="s8"` from `reference/template.html`.
-- [ ] Step 2: Replace `style-hover` with `.btn:hover` / `.btn--solid:hover` rules in `global.css` (values read from the template: solid `background:#F93427;color:#111`, outline `background:#111;color:#F2EFE8`).
-- [ ] Step 3: Mount in `Showreel.astro`.
-- [ ] Step 4: Verify - Run: `bun run check && bun run build && rg -c "data-scene" dist/index.html && rg -c "data-scene" dist/en/index.html && rg -c "TODO|cut off" dist` - Expected: `9`, `9`, and no `TODO`/`cut off` hits (rg exits 1 with no matches).
+- [x] Step 1: Port `id="s6"`, `id="s7"`, `id="s8"` from `reference/template.html`.
+      > Deviation: Em dashes in `Founder, CEO — Planthia Tech` and `Founder — Eukron` are written as ` - `. The dashed `TODO: exact stack list from repo` badge under Cast is dropped. The credits name line is the scene `<h2>`; the Previously and Cast pairs are `<dt>`/`<dd>` inside `<dl style="display:contents">` so the grid layout is unchanged. Featuring and Find me links render from `projects`, `person` and `SITE_URL`.
+      > Deviation: ASSUMED COPY: step 03 in the template is only a `TODO: step 03 title + line (TH / EN)` badge. Replaced (orchestrator-approved) with copy in the style of steps 01-02: EN `Ship it and keep it running` / `Deploy to production, watch it, and keep improving after launch.`; TH `ส่งงานขึ้นใช้จริง แล้วดูแลต่อเนื่อง` / `นำขึ้นระบบจริง คอยติดตามผล และพัฒนาต่อหลังเปิดใช้งาน`. Owner should confirm.
+- [x] Step 2: Replace `style-hover` with `.btn:hover` / `.btn--solid:hover` rules in `global.css` (values read from the template: solid `background:#F93427;color:#111`, outline `background:#111;color:#F2EFE8`).
+      > Deviation: Solid rule is `.btn.btn--solid:hover` (extra class so it wins over `.btn:hover` regardless of order); both carry `biome-ignore` comments for `!important`.
+- [x] Step 3: Mount in `Showreel.astro`.
+- [x] Step 4: Verify - Run: `bun run check && bun run build && rg -c "data-scene" dist/index.html && rg -c "data-scene" dist/en/index.html && rg -c "TODO|cut off" dist` - Expected: `9`, `9`, and no `TODO`/`cut off` hits (rg exits 1 with no matches).
+      > Deviation: Counts via `rg -o 'data-scene=' <file> | wc -l`: `9` and `9`; `rg -c "TODO|cut off" dist` printed nothing and exited 1.
 - [ ] Step 5: Commit - `git commit -m "feat: port how-i-work credits and contact scenes"`
 
 #### Task 8: Motion engine - port the Component class to vanilla TypeScript

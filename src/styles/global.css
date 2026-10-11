@@ -56,3 +56,10 @@ html[lang="th"] [data-l] {
   /* biome-ignore lint/complexity/noImportantStyles: must beat the inline resting style */
   color: #f2efe8 !important;
 }
+
+.btn.btn--solid:hover {
+  /* biome-ignore lint/complexity/noImportantStyles: must beat the inline resting style */
+  background: #f93427 !important;
+  /* biome-ignore lint/complexity/noImportantStyles: must beat the inline resting style */
+  color: #111 !important;
+}
