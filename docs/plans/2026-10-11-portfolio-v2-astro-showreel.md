@@ -381,9 +381,12 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 - Produces: `bun run check:seo` exit 0 only when, for `dist/index.html` and `dist/en/index.html`: exactly one `<h1>`; exactly one `<title>` of 20-70 chars; description 70-180 chars; canonical equals the expected absolute URL; hreflang set is `th`, `en`, `x-default` and reciprocal; the JSON-LD block parses and has a `Person` with every alias; every `og:*`/`twitter:*` tag present and `og:image` URL resolves to a file in `dist/`; `<html lang>` matches; no `href` points at `localhost`; every internal `href` resolves to a file in `dist/`; `robots.txt` references the sitemap; the visible text of the page (HTML stripped, `aria-hidden` gap spaces included) contains `Theerakarn` and, for TH, `ธีรกานต์`.
 
 **Steps:**
-- [ ] Step 1: Implement with `node:fs` and a small regex/`cheerio`-free parser (HTML is generated, regex on tags is acceptable here); print one line per failing assertion.
+- [x] Step 1: Implement with `node:fs` and a small regex/`cheerio`-free parser (HTML is generated, regex on tags is acceptable here); print one line per failing assertion.
+      > Deviation: `bun scripts/check-dist.ts [distDir]` takes an optional dist directory (defaults to `dist/`) so the proxy run below can point at a patched copy. Visible text strips tags to `''` so char-split spans rejoin; the Latin `Theerakarn` match is case-insensitive (the `<h1>` is uppercase `THEERAKARN`).
 - [ ] Step 2: Verify - Run: `bun run build && bun run check:seo` - Expected: exit 0, and a negative control: temporarily delete the canonical link from `dist/index.html` and re-run - Expected: exit 1 naming the canonical assertion; then rebuild.
-- [ ] Step 3: Commit - `git commit -m "test(seo): add built-output seo assertions"`
+      > Deviation: Expected unsatisfiable at this task; errors confined to `src/components/Showreel.astro` (still the `<main>stub</main>` stub: no `<h1>`, no name in visible text), owned by Task 5 (Track B). Real `dist/` run: exit 1 with only those 5 lines (h1 x2, visible-text x3). Proxy: a copy of `dist/` with an injected `<h1>` holding the names passes (exit 0); negative control on both the copy and the real `dist/` (canonical deleted) exits 1 naming the canonical assertion; rebuilt afterwards.
+      > Deviation: the reference has no visible `ธีรกานต์` anywhere, so the TH visible-text assertion will stay red after Track B merges unless Track B/E renders the Thai name in the TH body.
+- [x] Step 3: Commit - `git commit -m "test(seo): add built-output seo assertions"`
 
 ---
 
