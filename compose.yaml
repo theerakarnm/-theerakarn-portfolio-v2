@@ -1,0 +1,18 @@
+services:
+  web:
+    build: .
+    image: portfolio-v2:latest
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx
+      - /var/run
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    # No healthcheck key: the image's HEALTHCHECK (GET /healthz) applies as-is.
+    mem_limit: 128m

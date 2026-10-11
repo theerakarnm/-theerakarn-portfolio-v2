@@ -1,0 +1,63 @@
+---
+import type { Lang } from '../../content/site';
+import Split from '../Split.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const th = lang === 'th';
+---
+
+<section id="s6" data-scene="6" data-h="260" data-m="200" data-screen-label="06 How I work" style="position:relative;height:260vh">
+<div data-stage style="position:sticky;top:0;height:100vh;overflow:hidden;background:#F2EFE8">
+  <div data-text style="position:absolute;inset:0">
+    <h2 data-howtitle style="position:absolute;left:4vw;top:9vh;margin:0;font-weight:700;font-size:clamp(36px,6vw,104px);letter-spacing:-.03em;line-height:1.1">
+      <span data-l={lang}><Split mode="word" text={th ? 'วิธีทำงาน' : 'How I work'} /></span>
+    </h2>
+    <div style="position:absolute;left:4vw;right:4vw;top:27vh;bottom:11vh;display:flex;flex-direction:column;justify-content:space-between;gap:16px">
+
+      <div data-step style="display:flex;align-items:center;gap:clamp(14px,2.5vw,40px)">
+        <svg viewBox="0 0 100 100" style="flex:0 0 auto;width:clamp(52px,8vw,120px);overflow:visible">
+          <circle data-fill cx="55" cy="55" r="40" fill="url(#htK)"></circle>
+          <circle data-draw cx="50" cy="50" r="40" fill="none" stroke="#111" stroke-width="5"></circle>
+        </svg>
+        <div style="flex:0 1 46ch;display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em">01</div>
+          <div style="font-weight:700;font-size:clamp(19px,2.2vw,34px);line-height:1.25"><span data-l={lang}>{th ? 'เข้าใจธุรกิจก่อนเขียนโค้ด' : 'Understand the business first'}</span></div>
+          <div style="font-size:clamp(14px,1.15vw,17px);line-height:1.55"><span data-l={lang}>{th ? 'คุยปัญหาจริงให้ชัด แล้วตัดสินใจว่าควรสร้างอะไร และอะไรไม่ต้องสร้าง' : 'Get the real problem clear, then decide what to build and what not to build.'}</span></div>
+        </div>
+        <svg viewBox="0 0 100 2" preserveAspectRatio="none" style="flex:1 1 0;min-width:0;height:2px;overflow:visible"><line data-rule x1="0" y1="1" x2="100" y2="1" stroke="#111" stroke-width="2" vector-effect="non-scaling-stroke"></line></svg>
+      </div>
+
+      <div data-step style="display:flex;align-items:center;gap:clamp(14px,2.5vw,40px);margin-left:min(12vw,200px)">
+        <svg viewBox="0 0 100 100" style="flex:0 0 auto;width:clamp(52px,8vw,120px);overflow:visible">
+          <polygon data-fill points="55,13 99,95 11,95" fill="url(#htK)"></polygon>
+          <polygon data-draw points="50,8 94,90 6,90" fill="none" stroke="#111" stroke-width="5" stroke-linejoin="miter"></polygon>
+        </svg>
+        <div style="flex:0 1 46ch;display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em">02</div>
+          <div style="font-weight:700;font-size:clamp(19px,2.2vw,34px);line-height:1.25"><span data-l={lang}>{th ? 'ออกแบบระบบ แล้วสร้างให้ใช้ได้จริง' : 'Design it, then build it'}</span></div>
+          <div style="font-size:clamp(14px,1.15vw,17px);line-height:1.55"><span data-l={lang}>{th ? 'วางโครงสร้างให้รองรับการโต แล้วส่งงานเป็นชิ้นที่ใช้งานได้ทีละส่วน' : 'Plan an architecture that can grow, then ship it in working pieces, one at a time.'}</span></div>
+        </div>
+        <svg viewBox="0 0 100 2" preserveAspectRatio="none" style="flex:1 1 0;min-width:0;height:2px;overflow:visible"><line data-rule x1="0" y1="1" x2="100" y2="1" stroke="#111" stroke-width="2" vector-effect="non-scaling-stroke"></line></svg>
+      </div>
+
+      <div data-step style="display:flex;align-items:center;gap:clamp(14px,2.5vw,40px);margin-left:min(24vw,400px)">
+        <svg viewBox="0 0 100 100" style="flex:0 0 auto;width:clamp(52px,8vw,120px);overflow:visible">
+          <rect data-fill x="15" y="15" width="80" height="80" fill="url(#htK)"></rect>
+          <rect data-draw x="10" y="10" width="80" height="80" fill="none" stroke="#111" stroke-width="5"></rect>
+        </svg>
+        <div style="flex:0 1 46ch;display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em">03</div>
+          <div style="font-weight:700;font-size:clamp(19px,2.2vw,34px);line-height:1.25"><span data-l={lang}>{th ? 'ส่งงานขึ้นใช้จริง แล้วดูแลต่อเนื่อง' : 'Ship it and keep it running'}</span></div>
+          <div style="font-size:clamp(14px,1.15vw,17px);line-height:1.55"><span data-l={lang}>{th ? 'นำขึ้นระบบจริง คอยติดตามผล และพัฒนาต่อหลังเปิดใช้งาน' : 'Deploy to production, watch it, and keep improving after launch.'}</span></div>
+        </div>
+        <svg viewBox="0 0 100 2" preserveAspectRatio="none" style="flex:1 1 0;min-width:0;height:2px;overflow:visible"><line data-rule x1="0" y1="1" x2="100" y2="1" stroke="#111" stroke-width="2" vector-effect="non-scaling-stroke"></line></svg>
+      </div>
+
+    </div>
+  </div>
+</div>
+</section>

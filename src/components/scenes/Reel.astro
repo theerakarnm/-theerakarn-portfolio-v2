@@ -1,0 +1,102 @@
+---
+import { type Lang, projects } from '../../content/site';
+import Split from '../Split.astro';
+import BuddyArt from './art/BuddyArt.astro';
+import FridayArt from './art/FridayArt.astro';
+import MunMuangArt from './art/MunMuangArt.astro';
+import TenerieArt from './art/TenerieArt.astro';
+
+type Kind = 'tenerie' | 'munmuang' | 'buddy' | 'friday';
+
+interface Props {
+  id: Kind;
+  index: 2 | 3 | 4 | 5;
+  lang: Lang;
+}
+
+const { id, index, lang } = Astro.props;
+
+const frames: Record<
+  Kind,
+  {
+    label: string;
+    paper: string;
+    containerType: boolean;
+    meta: string[];
+    titleSize: string;
+    hoverBg: string;
+    hoverFg: string;
+  }
+> = {
+  tenerie: {
+    label: '02 Tenerie',
+    paper: '#F2EFE8',
+    containerType: false,
+    meta: ['Reel 01', 'Eukron', 'macOS · Native Swift · Notch UI'],
+    titleSize: 'clamp(52px,11vw,200px)',
+    hoverBg: '#F93427',
+    hoverFg: '#111',
+  },
+  munmuang: {
+    label: '03 MunMuang',
+    paper: '#F2EFE8',
+    containerType: true,
+    meta: ['Reel 02', 'Eukron', 'LINE · AI file assistant'],
+    titleSize: 'clamp(52px,11vw,200px)',
+    hoverBg: '#7C3AED',
+    hoverFg: '#F2EFE8',
+  },
+  buddy: {
+    label: '04 Buddy Glasses',
+    paper: '#F7F3EE',
+    containerType: true,
+    meta: ['Reel 03', 'Website · Optical shop · 4 branches, Bangkok'],
+    titleSize: 'clamp(48px,10vw,180px)',
+    hoverBg: '#E8702A',
+    hoverFg: '#F7F3EE',
+  },
+  friday: {
+    label: '05 FridayMerch',
+    paper: '#F2EFE8',
+    containerType: true,
+    meta: ['Reel 04', 'Drop site · tia51'],
+    titleSize: 'clamp(40px,9vw,170px)',
+    hoverBg: '#1A57FF',
+    hoverFg: '#F2EFE8',
+  },
+};
+
+const frame = frames[id];
+const project = projects.find((p) => p.id === id);
+if (!project) throw new Error(`Unknown project ${id}`);
+const host = new URL(project.url).hostname.replace(/^www\./, '');
+---
+
+<section id={`s${index}`} data-scene={index} data-h="320" data-m="220" data-kind={id} data-screen-label={frame.label} style="position:relative;height:320vh">
+<div data-stage style={`position:sticky;top:0;height:100vh;overflow:hidden;background:${frame.paper}`}>
+  <div data-art style={`position:absolute;top:11vh;right:4vw;width:clamp(260px,56vw,76vh);aspect-ratio:1${frame.containerType ? ';container-type:inline-size' : ''}`}>
+    {id === 'tenerie' && <TenerieArt />}
+    {id === 'munmuang' && <MunMuangArt lang={lang} />}
+    {id === 'buddy' && <BuddyArt />}
+    {id === 'friday' && <FridayArt />}
+  </div>
+  <div data-text style="position:absolute;left:4vw;bottom:12vh;max-width:min(620px,92vw);display:flex;flex-direction:column;gap:18px">
+    <div data-meta style="display:flex;flex-wrap:wrap;gap:8px 16px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase">
+      {frame.meta.map((m) => <span>{m}</span>)}
+    </div>
+    <h2 data-title aria-label={project.name} style={`margin:0;font-weight:700;font-size:${frame.titleSize};line-height:.86;letter-spacing:-.04em;mix-blend-mode:multiply`}><Split text={project.name.toUpperCase()} mode="char" /></h2>
+    <p data-desc style={`margin:0;font-size:clamp(16px,1.5vw,21px);line-height:1.5;max-width:34em;background:${frame.paper}`}>
+      <span data-l={lang}><Split mode="word" text={project.description[lang]} /></span>
+    </p>
+    <a data-link href={project.url} target="_blank" rel="noopener" style={`align-self:flex-start;display:flex;gap:12px;font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:12px 16px;background:#111;color:${frame.paper};text-decoration:none;--hover-bg:${frame.hoverBg};--hover-fg:${frame.hoverFg}`}>{host} ↗</a>
+  </div>
+</div>
+</section>
+
+<style>
+  /* Inline styles hold the resting state, so hover needs !important to win. */
+  a[data-link]:hover {
+    background: var(--hover-bg) !important;
+    color: var(--hover-fg) !important;
+  }
+</style>

@@ -1,0 +1,39 @@
+---
+import { type Lang, person } from '../../content/site';
+import Split from '../Split.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const th = lang === 'th';
+const profile = (host: string) => person.sameAs.find((u) => u.includes(host));
+const buttons = [
+  { label: 'LinkedIn', href: profile('linkedin.com') },
+  { label: 'Fastwork', href: profile('fastwork.co') },
+  { label: 'GitHub', href: profile('github.com') },
+];
+---
+
+<section id="s8" data-scene="8" data-h="200" data-m="170" data-screen-label="08 Contact" style="position:relative;height:200vh">
+<div data-stage style="position:sticky;top:0;height:100vh;overflow:hidden;background:#F2EFE8">
+  <div data-art style="position:absolute;right:4vw;top:12vh;width:clamp(230px,44vw,66vh);aspect-ratio:1">
+    <div data-ink style="position:absolute;left:0;top:0;width:58%;height:58%;border-radius:50%;background:#F93427;mix-blend-mode:multiply"></div>
+    <div data-ink style="position:absolute;right:0;top:0;width:58%;height:58%;border-radius:50%;background:#7C3AED;mix-blend-mode:multiply"></div>
+    <div data-ink style="position:absolute;left:0;bottom:0;width:58%;height:58%;border-radius:50%;background:#E8702A;mix-blend-mode:multiply"></div>
+    <div data-ink style="position:absolute;right:0;bottom:0;width:58%;height:58%;border-radius:50%;background:#1A57FF;mix-blend-mode:multiply"></div>
+  </div>
+  <h2 data-cta style="position:absolute;left:4vw;top:16vh;margin:0;font-weight:700;font-size:clamp(60px,14vw,250px);letter-spacing:-.04em;mix-blend-mode:multiply">
+    {th ? (
+      <span data-l={lang} style="display:block;line-height:1.12"><span style="display:block"><Split mode="word" text="มาสร้าง" /></span><span style="display:block"><Split mode="word" text="ด้วยกัน" /></span></span>
+    ) : (
+      <span data-l={lang} style="line-height:.86"><span style="display:block"><Split mode="word" text="Let's" /></span><span class="gap">{' '}</span><span style="display:block"><Split mode="word" text="build." /></span></span>
+    )}
+  </h2>
+  <div style="position:absolute;left:4vw;right:4vw;bottom:11vh;display:flex;flex-wrap:wrap;gap:12px;font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:.08em;text-transform:uppercase">
+    <a data-btn class="btn btn--solid" href={`mailto:${person.email[0]}`} style="display:flex;padding:16px 22px;background:#111;color:#F2EFE8;text-decoration:none;border:2px solid #111;text-transform:none">{person.email[0]}</a>
+    {buttons.map((b) => <a data-btn class="btn" href={b.href} target="_blank" rel="noopener" style="display:flex;padding:16px 22px;color:#111;text-decoration:none;border:2px solid #111;background:#F2EFE8">{b.label} ↗</a>)}
+  </div>
+</div>
+</section>

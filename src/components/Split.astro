@@ -1,0 +1,18 @@
+---
+import { type SplitMode, splitTokens } from '../lib/split';
+
+// Word mode leaves every segment readable: the `.gap` spans carry the real
+// spaces, so assistive tech and crawlers get the full sentence. Char mode hides
+// the glyphs, so its heading must carry the accessible name (`aria-label`).
+interface Props {
+  text: string;
+  mode: SplitMode;
+  tag?: 'span' | 'h1' | 'h2' | 'p';
+}
+
+const { text, mode, tag: Tag = 'span' } = Astro.props;
+const hidden = mode === 'char' ? 'true' : undefined;
+const tokens = splitTokens(text, mode);
+---
+
+<Tag data-split={mode}>{tokens.map((t) => t.spaceAfter ? (<Fragment><span data-w aria-hidden={hidden} style="display:inline-block;margin-right:0.3em">{t.text}</span><span aria-hidden={hidden} class="gap">{' '}</span></Fragment>) : (<span data-w aria-hidden={hidden} style="display:inline-block">{t.text}</span>))}</Tag>

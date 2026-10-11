@@ -1,0 +1,23 @@
+---
+import Seo from '../components/Seo.astro';
+import type { Lang } from '../content/site';
+import '../styles/fonts.css';
+import '../styles/global.css';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <Seo lang={lang} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
