@@ -11,7 +11,7 @@ const body = `# ${person.name.en} (${person.name.th})
 
 ## English
 
-${person.name.en} is the ${person.jobTitle.en} of ${org.name}, based in Thailand. His name is also written ${spellings}. ${person.description.en}
+${person.name.en} is the ${person.jobTitle.en} of ${org.name}, based in Thailand. The name is also written ${spellings}. ${person.description.en}
 
 Company: ${orgLine} ${org.description.en}
 
