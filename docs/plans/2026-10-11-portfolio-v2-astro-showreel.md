@@ -348,9 +348,11 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 - Produces: static endpoints. `robots.txt`: `User-agent: *` `Allow: /`; explicit `Allow: /` blocks for `GPTBot`, `OAI-SearchBot`, `ChatGPT-User`, `ClaudeBot`, `Claude-User`, `Claude-SearchBot`, `PerplexityBot`, `Perplexity-User`, `Google-Extended`, `Applebot-Extended`, `CCBot`; `Sitemap: https://theerakarnm.dev/sitemap-index.xml`. `llms.txt` follows the llms.txt convention (H1 name, blockquote summary, sections with links). `llms-full.txt` is a plain Markdown biography in English and Thai: who he is, name spellings ("also written Theerakarnm, theerakarnm, Theerakarn M., ธีรกานต์ ใหม่วงค์"), role, company, each project with URL and one-paragraph description, contact and profile links.
 
 **Steps:**
-- [ ] Step 1: Implement the three `GET` endpoints with `export const GET = () => new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } })`; build bodies from `site.ts` so facts are not duplicated.
-- [ ] Step 2: Verify - Run: `bun run build && ls dist/robots.txt dist/llms.txt dist/llms-full.txt dist/sitemap-index.xml dist/sitemap-0.xml && rg -c "xhtml:link" dist/sitemap-0.xml` - Expected: all files exist; sitemap contains hreflang alternates (count at least 2).
-- [ ] Step 3: Commit - `git commit -m "feat(aieo): add robots, llms.txt, llms-full.txt"`
+- [x] Step 1: Implement the three `GET` endpoints with `export const GET = () => new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } })`; build bodies from `site.ts` so facts are not duplicated.
+      > Deviation: Endpoints typed as `APIRoute`. Thai name spellings in `llms-full.txt` come from `person.alternateNames`; no fact is hardcoded outside `site.ts`.
+- [x] Step 2: Verify - Run: `bun run build && ls dist/robots.txt dist/llms.txt dist/llms-full.txt dist/sitemap-index.xml dist/sitemap-0.xml && rg -c "xhtml:link" dist/sitemap-0.xml` - Expected: all files exist; sitemap contains hreflang alternates (count at least 2).
+      > Deviation: `rg -c` counts lines and the sitemap is one minified line (prints 1); `rg -o xhtml:link dist/sitemap-0.xml | wc -l` prints 4 (th-TH + en-US on both URLs), which satisfies the intent.
+- [x] Step 3: Commit - `git commit -m "feat(aieo): add robots, llms.txt, llms-full.txt"`
 
 #### Task 13: Open Graph image
 
