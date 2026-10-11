@@ -159,10 +159,10 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
   ```
 
 **Steps:**
-- [ ] Step 1: Copy project names, URLs and descriptions from `reference/template.html` scenes 2-5 (Tenerie `https://tenerie.eukron.com/`, MunMuang `https://munmuang.eukron.com/`, Buddy Glasses `https://buddy-glasses.com/`, FridayMerch `https://www.fridaymerch.store/`) into `projects`; copy the TH and EN premise/role lines into `person.description` and `jobTitle`. `knowsAbout`: web applications, backend services, cloud infrastructure, full-stack development, tech consulting, LINE bots, AI assistants (adjust to what the reference scenes say).
-- [ ] Step 2: Write `tests/unit/i18n.test.ts` asserting `pathFor('th') === '/'`, `pathFor('en') === '/en/'`, `absoluteUrl('en') === 'https://theerakarnm.dev/en/'`, `otherLang('th') === 'en'`.
-- [ ] Step 3: Verify - Run: `bun run test` - Expected: 4 pass, 0 fail
-- [ ] Step 4: Commit - `git commit -m "feat: add site content module and i18n helpers"`
+- [x] Step 1: Copy project names, URLs and descriptions from `reference/template.html` scenes 2-5 (Tenerie `https://tenerie.eukron.com/`, MunMuang `https://munmuang.eukron.com/`, Buddy Glasses `https://buddy-glasses.com/`, FridayMerch `https://www.fridaymerch.store/`) into `projects`; copy the TH and EN premise/role lines into `person.description` and `jobTitle`. `knowsAbout`: web applications, backend services, cloud infrastructure, full-stack development, tech consulting, LINE bots, AI assistants (adjust to what the reference scenes say).
+- [x] Step 2: Write `tests/unit/i18n.test.ts` asserting `pathFor('th') === '/'`, `pathFor('en') === '/en/'`, `absoluteUrl('en') === 'https://theerakarnm.dev/en/'`, `otherLang('th') === 'en'`.
+- [x] Step 3: Verify - Run: `bun run test` - Expected: 4 pass, 0 fail
+- [x] Step 4: Commit - `git commit -m "feat: add site content module and i18n helpers"`
 
 #### Task 4: Layout skeleton, stubs and both routes
 
