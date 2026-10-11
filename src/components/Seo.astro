@@ -1,9 +1,58 @@
 ---
-import type { Lang } from '../content/site';
+import { type Lang, person, SITE_URL } from '../content/site';
+import { absoluteUrl } from '../lib/i18n';
+import { seoFor } from '../lib/seo';
 
 interface Props {
   lang: Lang;
 }
+
+const { lang } = Astro.props;
+const seo = seoFor(lang);
+const ogImage = `${SITE_URL}/og.png`;
+const ogImageAlt = `${person.name.en} (${person.name.th}) - Showreel`;
 ---
 
-<title>stub</title>
+<title>{seo.title}</title>
+<meta name="description" content={seo.description} />
+<link rel="canonical" href={seo.canonical} />
+<link rel="alternate" hreflang="th" href={absoluteUrl('th')} />
+<link rel="alternate" hreflang="en" href={absoluteUrl('en')} />
+<link rel="alternate" hreflang="x-default" href={absoluteUrl('th')} />
+<meta
+  name="robots"
+  content="index,follow,max-image-preview:large,max-snippet:-1"
+/>
+<meta name="author" content={person.name.en} />
+<meta name="theme-color" content="#F2EFE8" />
+<meta property="og:title" content={seo.title} />
+<meta property="og:description" content={seo.description} />
+<meta property="og:type" content="website" />
+<meta property="og:url" content={seo.canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={ogImageAlt} />
+<meta property="og:locale" content={seo.ogLocale} />
+<meta property="og:locale:alternate" content={seo.ogAlternate} />
+<meta property="og:site_name" content={person.name.en} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={seo.title} />
+<meta name="twitter:description" content={seo.description} />
+<meta name="twitter:image" content={ogImage} />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+<link
+  rel="preload"
+  as="font"
+  type="font/woff2"
+  href="/fonts/anuphan-400-latin.woff2"
+  crossorigin
+/>
+<link
+  rel="preload"
+  as="font"
+  type="font/woff2"
+  href="/fonts/anuphan-400-thai.woff2"
+  crossorigin
+/>
