@@ -177,10 +177,12 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
   - `Base.astro` props: `{ lang: Lang }`, default slot - renders `<html lang={lang}>`, `<head>` with charset, viewport, `<Seo lang={lang} />`, imports `fonts.css` and `global.css`, and `<body><slot /></body>`.
 
 **Steps:**
-- [ ] Step 1: Write the three files above. `global.css` sets only the reset from the reference (`* {margin:0;padding:0;box-sizing:border-box}`) and `body { background:#F2EFE8 }`. Stubs render `<main>stub</main>` and `<title>stub</title>`.
-- [ ] Step 2: `src/pages/index.astro` is `<Base lang="th"><Showreel lang="th" /></Base>`; `src/pages/en/index.astro` is the same with `en`. `favicon.svg`: a 32px square `#111` with a `#F93427` plus mark (reuse the Premise scene's plus).
-- [ ] Step 3: Verify - Run: `bun run check && bun run build && test -f dist/index.html && test -f dist/en/index.html && test -f dist/sitemap-index.xml` - Expected: all exit 0
-- [ ] Step 4: Commit - `git commit -m "feat: add layout skeleton and th/en routes"`
+- [x] Step 1: Write the three files above. `global.css` sets only the reset from the reference (`* {margin:0;padding:0;box-sizing:border-box}`) and `body { background:#F2EFE8 }`. Stubs render `<main>stub</main>` and `<title>stub</title>`.
+      > Deviation: `astro check` refuses typescript ^7 (installed by Task 1), so typescript is downgraded to ^6 (`bun add -d typescript@^6`), and `tsconfig.json` gains `compilerOptions.types: ["bun"]` so `bun:test` resolves.
+      > Deviation: Biome cannot see `.astro` template usage of frontmatter imports/variables, so `biome.json` gets an override for `**/*.astro` turning off `noUnusedImports` and `noUnusedVariables`.
+- [x] Step 2: `src/pages/index.astro` is `<Base lang="th"><Showreel lang="th" /></Base>`; `src/pages/en/index.astro` is the same with `en`. `favicon.svg`: a 32px square `#111` with a `#F93427` plus mark (reuse the Premise scene's plus).
+- [x] Step 3: Verify - Run: `bun run check && bun run build && test -f dist/index.html && test -f dist/en/index.html && test -f dist/sitemap-index.xml` - Expected: all exit 0
+- [x] Step 4: Commit - `git commit -m "feat: add layout skeleton and th/en routes"`
 
 ---
 
