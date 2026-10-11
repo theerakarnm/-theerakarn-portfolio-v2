@@ -99,6 +99,8 @@ function checkPage(lang: Lang, relative: string) {
     fail(file, `expected exactly one <title>, found ${titles.length}`);
   } else if (titles[0].length < 20 || titles[0].length > 70) {
     fail(file, `title length ${titles[0].length} not in 20-70`);
+  } else if (lang === 'th' && !titles[0].includes(person.name.th)) {
+    fail(file, `<title> lacks the Thai name "${person.name.th}"`);
   }
 
   const descriptions = metaContent(html, 'description');
@@ -106,6 +108,8 @@ function checkPage(lang: Lang, relative: string) {
     fail(file, `expected one meta description, found ${descriptions.length}`);
   } else if (descriptions[0].length < 70 || descriptions[0].length > 180) {
     fail(file, `description length ${descriptions[0].length} not in 70-180`);
+  } else if (lang === 'th' && !descriptions[0].includes(person.name.th)) {
+    fail(file, `meta description lacks the Thai name "${person.name.th}"`);
   }
 
   const links = tagsOf(html, 'link');
@@ -154,6 +158,12 @@ function checkPage(lang: Lang, relative: string) {
         fail(file, `JSON-LD must have one Person, found ${people.length}`);
       } else if (missing.length > 0) {
         fail(file, `JSON-LD Person is missing aliases: ${missing.join(', ')}`);
+      } else if (
+        lang === 'th' &&
+        people[0].name !== person.name.th &&
+        !aliases.includes(person.name.th)
+      ) {
+        fail(file, `JSON-LD Person lacks the Thai name "${person.name.th}"`);
       }
     } catch (error) {
       fail(file, `JSON-LD does not parse: ${error}`);
@@ -201,9 +211,6 @@ function checkPage(lang: Lang, relative: string) {
   );
   if (!/theerakarn/i.test(visible))
     fail(file, 'visible text lacks "Theerakarn"');
-  if (lang === 'th' && !visible.includes('ธีรกานต์')) {
-    fail(file, 'visible text lacks "ธีรกานต์"');
-  }
 }
 
 checkPage('th', 'index.html');
