@@ -226,3 +226,11 @@ for (const lang of ['th', 'en'] as const) {
     expect(ratio, name).toBeLessThanOrEqual(MAX_DIFF);
   });
 }
+
+test('contact heading text keeps the word space', async ({ page }) => {
+  await page.goto(`${SITE}/en/`);
+  const text = await page
+    .locator('[data-cta]')
+    .evaluate((el) => el.textContent?.replace(/\s+/g, ' ').trim());
+  expect(text).toBe("Let's build.");
+});
