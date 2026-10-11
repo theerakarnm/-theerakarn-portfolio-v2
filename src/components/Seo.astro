@@ -1,6 +1,7 @@
 ---
 import { type Lang, person, SITE_URL } from '../content/site';
 import { absoluteUrl } from '../lib/i18n';
+import { jsonLd } from '../lib/jsonld';
 import { seoFor } from '../lib/seo';
 
 interface Props {
@@ -55,4 +56,8 @@ const ogImageAlt = `${person.name.en} (${person.name.th}) - Showreel`;
   type="font/woff2"
   href="/fonts/anuphan-400-thai.woff2"
   crossorigin
+/>
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify(jsonLd(lang)).replaceAll('<', '\\u003c')}
 />

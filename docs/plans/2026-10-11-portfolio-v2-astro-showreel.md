@@ -331,10 +331,12 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 **Gotcha:** Do not invent facts (no birth data, no education, no awards, no phone). Only use values from `site.ts`. Do not add `Review` or `AggregateRating`. `alternateName` carries every spelling the owner wants to rank for.
 
 **Steps:**
-- [ ] Step 1: Write `tests/unit/jsonld.test.ts`: for both languages `JSON.stringify` parses back; the graph contains exactly one node with `@type` `Person` whose `alternateName` includes `Theerakarnm` and `ธีรกานต์ ใหม่วงค์` and whose `sameAs` has 3 URLs; every `@id` referenced (`worksFor`, `founder`, `mainEntity`) exists in the graph.
-- [ ] Step 2: Implement `jsonld.ts` and wire it into `Seo.astro`.
-- [ ] Step 3: Verify - Run: `bun run test` - Expected: all unit tests pass.
-- [ ] Step 4: Commit - `git commit -m "feat(seo): add schema.org person and organization graph"`
+- [x] Step 1: Write `tests/unit/jsonld.test.ts`: for both languages `JSON.stringify` parses back; the graph contains exactly one node with `@type` `Person` whose `alternateName` includes `Theerakarnm` and `ธีรกานต์ ใหม่วงค์` and whose `sameAs` has 3 URLs; every `@id` referenced (`worksFor`, `founder`, `mainEntity`) exists in the graph.
+      > Deviation: Test also follows `creator` and `publisher` references, not only `worksFor`/`founder`/`mainEntity`.
+- [x] Step 2: Implement `jsonld.ts` and wire it into `Seo.astro`.
+      > Deviation: `org.url` is empty, so the `Corporation` node omits `url`. Person `email` uses `mailto:` URIs; JSON in the script tag escapes `<` as `\u003c`.
+- [x] Step 3: Verify - Run: `bun run test` - Expected: all unit tests pass.
+- [x] Step 4: Commit - `git commit -m "feat(seo): add schema.org person and organization graph"`
 
 #### Task 12: robots.txt, llms.txt, llms-full.txt and sitemap
 
