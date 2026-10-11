@@ -7,3 +7,59 @@
 body {
   background: #f2efe8;
 }
+
+html,
+body {
+  margin: 0;
+  background: #f2efe8;
+  color: #111;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: #111;
+}
+
+a:hover {
+  color: #f93427;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  /* biome-ignore lint/complexity/noImportantStyles: lenis' own recommended rule, copied from the reference */
+  scroll-behavior: auto !important;
+}
+
+/* The reference runtime set these inline on every Thai-language span. */
+html[lang="th"] [data-l] {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* Keeps a real space between split words for crawlers without taking width. */
+.gap {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Inline styles hold the resting state, so hover needs !important to win. */
+.btn:hover {
+  /* biome-ignore lint/complexity/noImportantStyles: must beat the inline resting style */
+  background: #111 !important;
+  /* biome-ignore lint/complexity/noImportantStyles: must beat the inline resting style */
+  color: #f2efe8 !important;
+}
+
+.btn.btn--solid:hover {
+  /* biome-ignore lint/complexity/noImportantStyles: must beat the inline resting style */
+  background: #f93427 !important;
+  /* biome-ignore lint/complexity/noImportantStyles: must beat the inline resting style */
+  color: #111 !important;
+}
