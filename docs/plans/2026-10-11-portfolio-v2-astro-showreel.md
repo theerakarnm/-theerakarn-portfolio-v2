@@ -403,9 +403,13 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 **Gotcha:** The page uses inline `style=` attributes and Astro inline scripts may be emitted; the CSP must include `style-src 'self' 'unsafe-inline'` and a script policy that matches what `dist/index.html` actually contains. Check `rg "<script" dist/index.html` and pick `script-src 'self'` only if no inline script is emitted; otherwise add the specific `sha256-` hashes or set `inlineStylesheets`/script bundling so none are inline. Do not use `'unsafe-inline'` for scripts.
 
 **Steps:**
-- [ ] Step 1: Write the config. Add `src/pages/404.astro` is NOT part of this track; if `dist/404.html` does not exist, the `error_page` line is dropped and nginx's default 404 is used (no cross-track edits).
-- [ ] Step 2: Verify - Run: `rg -n "listen 8080|gzip_static|immutable|healthz|server_tokens off" deploy/nginx/default.conf` - Expected: all five present.
-- [ ] Step 3: Commit - `git commit -m "feat(deploy): add container nginx config"`
+- [x] Step 1: Write the config. Add `src/pages/404.astro` is NOT part of this track; if `dist/404.html` does not exist, the `error_page` line is dropped and nginx's default 404 is used (no cross-track edits).
+> Deviation: `dist/404.html` does not exist, so `error_page` is dropped (as the step allows).
+> Deviation: Cache-Control comes from a `map $uri` (immutable for `/_astro/` and `/fonts/`, `no-cache` otherwise) applied once at server level instead of per-location `add_header`, because a location-level `add_header` silently drops every server-level security header.
+> Deviation: `absolute_redirect off` added so directory redirects (`/en` -> `/en/`) do not leak the internal `:8080` port behind the host proxy.
+> Deviation: CSP written for the final design: `script-src 'self'` (Showreel's hoisted `<script>import ...</script>` bundles to an external `/_astro/*.js`; JSON-LD `application/ld+json` is a data block and is not subject to `script-src`). At this commit `dist/index.html` has no `<script>` at all (Showreel is a stub), so Track E must re-run `rg "<script" dist/index.html` after merge and confirm nothing executable is inline.
+- [x] Step 2: Verify - Run: `rg -n "listen 8080|gzip_static|immutable|healthz|server_tokens off" deploy/nginx/default.conf` - Expected: all five present.
+- [x] Step 3: Commit - `git commit -m "feat(deploy): add container nginx config"`
 
 #### Task 16: Production Dockerfile and pre-compression
 
@@ -425,11 +429,16 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 **Gotcha:** The Playwright dependency must not run in the image build (it is a dev dependency used by tests); `bun install --frozen-lockfile` installs dev deps too, which is fine for a build stage, but `postinstall` must not download browsers. The final image must contain only `dist/` and nginx config. `docker` is not installed on the planning machine.
 
 **Steps:**
-- [ ] Step 1: Write the three files and the `postbuild` script.
+- [x] Step 1: Write the three files and the `postbuild` script.
+> Deviation: runtime base pinned to `nginxinc/nginx-unprivileged:1.30.5-alpine` (Docker Hub `stable-alpine` = 1.30.5, pushed 2026-10-05; mainline is 1.31.6). The config is copied before `dist/` so content-only rebuilds reuse that layer. `.dockerignore` also excludes `Dockerfile`, `.dockerignore` and `compose.yaml`.
 - [ ] Step 2: Verify - Run: `bun run build && find dist -name "*.html.gz" | head -2 && gzip -t dist/index.html.gz` - Expected: `.gz` siblings exist and `gzip -t` exits 0.
+> Deviation: Expected unsatisfiable at this task; the stub `dist/index.html` is 251 bytes, under the 256-byte skip threshold, because `src/components/Showreel.astro` and `Seo.astro` are still stubs owned by Tracks B and C. Ran: postbuild wrote `dist/sitemap-0.xml.gz` and `dist/_astro/Base.*.css.gz`, `gzip -t` on both exits 0; on a copy of `dist/` with `index.html` padded past 256 bytes the script wrote `dist/index.html.gz` and `gzip -t` exited 0. Track E re-runs this exact command after merge.
 - [ ] Step 3: Verify - Run: `docker build -t portfolio-v2:test . && docker run --rm -d -p 18080:8080 --name pv2 portfolio-v2:test && sleep 2 && curl -sI localhost:18080/ | head -1 && curl -s localhost:18080/healthz && curl -sI -H "Accept-Encoding: gzip" localhost:18080/ | rg -i content-encoding && docker exec pv2 id -u && docker stop pv2` - Expected (only if Docker is available; it is not on the planning machine): `HTTP/1.1 200 OK`, `ok`, `Content-Encoding: gzip`, uid `101`. If Docker is still absent, mark this step as awaiting human and rely on the next step.
+> Awaiting human: Docker is not installed on this machine (`which docker` prints nothing); run this block on the Linux VM (same as Step 4).
 - [ ] Step 4: 👤 Verify - Human: on the Linux VM run the Step 3 command block - Expected: same outputs as Step 3 - Proxy: Step 2 (`gzip -t` on the pre-compressed build) plus Task 15 Step 2 (config contents).
-- [ ] Step 5: Commit - `git commit -m "feat(deploy): add production dockerfile and asset pre-compression"`
+  - [x] Proxy run: Step 2 command (gz files valid, see Step 2 note) and Task 15 Step 2 `rg` (all five patterns present).
+> Awaiting human: on the Linux VM, from the repo root, run the Step 3 command block and confirm `HTTP/1.1 200 OK`, `ok`, `Content-Encoding: gzip`, uid `101`.
+- [x] Step 5: Commit - `git commit -m "feat(deploy): add production dockerfile and asset pre-compression"`
 
 #### Task 17: Compose file, host nginx vhost and CI
 
@@ -442,9 +451,10 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
   CI: on push and PR - `oven-sh/setup-bun`, `bun install --frozen-lockfile`, `bun run check`, `bun run test`, `bun run build`, `bun run check:seo`. No registry push (the VM builds from source with `docker compose up -d --build`).
 
 **Steps:**
-- [ ] Step 1: Write the three files.
-- [ ] Step 2: Verify - Run: `bun -e "for (const f of ['compose.yaml','.github/workflows/ci.yml']) Bun.YAML.parse(await Bun.file(f).text())"` - Expected: exits 0 (both files parse).
-- [ ] Step 3: Commit - `git commit -m "feat(deploy): add compose, host nginx vhost and ci"`
+- [x] Step 1: Write the three files.
+> Deviation: compose omits a `healthcheck` key on purpose; Compose inherits the image's HEALTHCHECK, so there is one source of truth. Host vhost ships the brotli directives commented out with the module guard comment, because an active `brotli on;` makes stock nginx refuse to start; it also adds an ACME webroot location on port 80 and assumes the certificate covers `www.theerakarnm.dev`. CI pins `actions/checkout@v7`, `oven-sh/setup-bun@v2` (bun 1.3.5); `bun run check:seo` needs `scripts/check-dist.ts` from Track C and is red until that merges.
+- [x] Step 2: Verify - Run: `bun -e "for (const f of ['compose.yaml','.github/workflows/ci.yml']) Bun.YAML.parse(await Bun.file(f).text())"` - Expected: exits 0 (both files parse).
+- [x] Step 3: Commit - `git commit -m "feat(deploy): add compose, host nginx vhost and ci"`
 
 ---
 
