@@ -11,18 +11,27 @@ import { PNG } from 'pngjs';
 // - The particle canvas is hidden in both pages. Its seeded layout matches,
 //   but every particle drifts with wall-clock time (`Math.sin(t * .7 + ph)`),
 //   so two loads never paint the same pixels. Particles are compared instead
-//   by the number of inked canvas pixels per scene.
+//   as a coarse ink-density grid: drift (up to ~22 px) stays inside
+//   neighbouring cells, while a misplaced formation moves ink between cells.
 // - The reference's dashed `TODO` badges are hidden on the reference only: the
 //   port does not ship them (plan Global Constraints).
 // - The text column of How-I-work step 03 is removed in both pages: the
 //   reference has only a TODO badge there and the port has the owner-approved
 //   assumed copy, whose extra height would shift the other steps.
+//
+// Copy is also compared as text per scene, because a reworded line changes too
+// few pixels for the screenshot threshold. Known, approved copy differences are
+// listed in TEXT_FIXES.
 
 const REFERENCE =
+  process.env.REFERENCE_HTML ??
   'file:///Users/jametirakarn/Downloads/Theerakarn%20Showreel.html';
 const SITE = 'http://localhost:4401';
-const MAX_DIFF = 0.015;
+const MAX_DIFF = 0.01;
 const MAX_INK_DIFF = 0.02;
+const INK_CELL = 48;
+const MAX_INK_L1 = 0.05;
+const MAX_INK_CELL = 0.15;
 const SETTLE_MS = 1500;
 const OUT = 'tests/parity/.out';
 
@@ -78,17 +87,71 @@ async function scrollToScene(page: Page, scene: number): Promise<void> {
   await page.waitForTimeout(SETTLE_MS);
 }
 
-function inkedParticlePixels(page: Page): Promise<number> {
-  return page.evaluate(() => {
+interface Ink {
+  inked: number;
+  grid: number[];
+}
+
+// Inked pixel count plus the alpha sum per INK_CELL x INK_CELL CSS-px cell.
+function particleInk(page: Page): Promise<Ink> {
+  return page.evaluate((cssCell) => {
     const canvas =
       document.querySelector<HTMLCanvasElement>('[data-particles]');
     const ctx = canvas?.getContext('2d');
-    if (!canvas || !ctx) return -1;
-    const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    if (!canvas || !ctx) return { inked: -1, grid: [] };
+    const { width, height } = canvas;
+    const cell = Math.max(1, Math.round((cssCell * width) / innerWidth));
+    const cols = Math.ceil(width / cell);
+    const grid = new Array<number>(cols * Math.ceil(height / cell)).fill(0);
+    const data = ctx.getImageData(0, 0, width, height).data;
     let inked = 0;
-    for (let i = 3; i < data.length; i += 4) if (data[i] > 0) inked++;
-    return inked;
-  });
+    for (let y = 0; y < height; y++) {
+      const row = Math.floor(y / cell) * cols;
+      for (let x = 0; x < width; x++) {
+        const a = data[(y * width + x) * 4 + 3];
+        if (a === 0) continue;
+        inked++;
+        grid[row + Math.floor(x / cell)] += a;
+      }
+    }
+    return { inked, grid };
+  }, INK_CELL);
+}
+
+// L1 distance of the normalised grids (0..2) and the largest single-cell
+// difference relative to the reference's fullest cell.
+function inkGridDistance(port: number[], ref: number[]) {
+  const sum = (g: number[]) => g.reduce((s, v) => s + v, 0) || 1;
+  const sp = sum(port);
+  const sr = sum(ref);
+  let l1 = 0;
+  let cell = 0;
+  for (let i = 0; i < ref.length; i++) {
+    const d = Math.abs(port[i] / sp - ref[i] / sr);
+    l1 += d;
+    cell = Math.max(cell, d);
+  }
+  return { l1, cell: cell / (Math.max(...ref) / sr || 1) };
+}
+
+// Reference copy -> port copy, applied to whitespace-free text.
+const TEXT_FIXES: Record<Lang, [string, string][]> = {
+  th: [['\u2014', '-']],
+  en: [
+    ['\u2014', '-'],
+    // Step 02's English line is cut off in the reference.
+    ['shipitinw\u2026', 'shipitinworkingpieces,oneatatime.'],
+  ],
+};
+
+function sceneText(page: Page, scene: number): Promise<string> {
+  return page.evaluate(
+    (i) =>
+      document
+        .querySelectorAll<HTMLElement>('[data-scene]')
+        [i].innerText.replace(/\s+/g, ''),
+    scene,
+  );
 }
 
 function diffRatio(name: string, a: Buffer, b: Buffer): number {
@@ -124,12 +187,26 @@ for (const viewport of VIEWPORTS) {
           await ref.screenshot(),
         );
         expect.soft(ratio, name).toBeLessThanOrEqual(MAX_DIFF);
-        const inkRef = await inkedParticlePixels(ref);
-        const inkPort = await inkedParticlePixels(port);
-        console.log(`${name} particles: ${inkPort} vs ${inkRef}`);
+        const inkRef = await particleInk(ref);
+        const inkPort = await particleInk(port);
+        const grid = inkGridDistance(inkPort.grid, inkRef.grid);
+        console.log(
+          `${name} particles: ${inkPort.inked} vs ${inkRef.inked}, grid l1 ${grid.l1.toFixed(3)} cell ${grid.cell.toFixed(3)}`,
+        );
         expect
-          .soft(Math.abs(inkPort - inkRef), `${name} particles`)
-          .toBeLessThanOrEqual(MAX_INK_DIFF * Math.max(inkRef, 1));
+          .soft(Math.abs(inkPort.inked - inkRef.inked), `${name} particles`)
+          .toBeLessThanOrEqual(MAX_INK_DIFF * Math.max(inkRef.inked, 1));
+        expect
+          .soft(grid.l1, `${name} particle layout`)
+          .toBeLessThanOrEqual(MAX_INK_L1);
+        expect
+          .soft(grid.cell, `${name} particle cell`)
+          .toBeLessThanOrEqual(MAX_INK_CELL);
+        let refText = await sceneText(ref, scene);
+        for (const [from, to] of TEXT_FIXES[lang]) {
+          refText = refText.replaceAll(from, to);
+        }
+        expect.soft(await sceneText(port, scene), `${name} text`).toBe(refText);
       }
     });
   }
