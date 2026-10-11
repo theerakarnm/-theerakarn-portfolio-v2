@@ -232,10 +232,13 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 **Gotcha:** `data-kind` values drive `tlReel`; they are `tenerie`, `munmuang`, `buddy`, `friday` in the reference - copy exactly. Every `<a data-link>` to a project is a real `<a href>` with `rel="noopener"` for external targets. Project title is an `<h2>`. SVG `<defs>` ids (`htT`, `notchM`, ...) must stay unique per page; keep the reference ids.
 
 **Steps:**
-- [ ] Step 1: Diff the four reel sections in `reference/template.html` to see what is shared versus per-kind; move the shared frame into `Reel.astro` and each differing art block into its `art/*.astro` component, copying SVG/HTML verbatim apart from the attribute renames.
-- [ ] Step 2: Fill title/description/meta/link from `projects` (`site.ts`) so the facts live in one place; non-fact strings (labels such as meta chips) are copied from the template per language.
-- [ ] Step 3: Add the four `<Reel />` calls after `<Premise />` in `Showreel.astro`.
-- [ ] Step 4: Verify - Run: `bun run check && bun run build && rg -c "data-scene" dist/index.html` - Expected: 0 errors, count `6`.
+- [x] Step 1: Diff the four reel sections in `reference/template.html` to see what is shared versus per-kind; move the shared frame into `Reel.astro` and each differing art block into its `art/*.astro` component, copying SVG/HTML verbatim apart from the attribute renames.
+      > Deviation: The dashed `TODO: role` / `TODO: role / stack` meta chips are dropped (Task 7 Verify forbids `TODO` in `dist`; orchestrator approved). Per-kind frame differences (stage paper `#F7F3EE` for buddy, `container-type` absent on tenerie, title font sizes, link colours) live in a typed table in `Reel.astro`. The template's `style-hover` on each project link becomes a scoped `a[data-link]:hover` rule reading `--hover-bg`/`--hover-fg` set inline per kind.
+- [x] Step 2: Fill title/description/meta/link from `projects` (`site.ts`) so the facts live in one place; non-fact strings (labels such as meta chips) are copied from the template per language.
+      > Deviation: Title is `project.name.toUpperCase()` and link text is the URL host without `www.` plus ` ↗`, both of which reproduce the template strings exactly.
+- [x] Step 3: Add the four `<Reel />` calls after `<Premise />` in `Showreel.astro`.
+- [x] Step 4: Verify - Run: `bun run check && bun run build && rg -c "data-scene" dist/index.html` - Expected: 0 errors, count `6`.
+      > Deviation: Scene count taken with `rg -o 'data-scene=' <file> | wc -l` (single-line HTML): `6` for `/` and `/en/`.
 - [ ] Step 5: Commit - `git commit -m "feat: port reel scenes for tenerie munmuang buddy and friday"`
 
 #### Task 7: Scenes 6-8 (How I work, End credits, Contact)
