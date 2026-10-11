@@ -442,9 +442,10 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
   CI: on push and PR - `oven-sh/setup-bun`, `bun install --frozen-lockfile`, `bun run check`, `bun run test`, `bun run build`, `bun run check:seo`. No registry push (the VM builds from source with `docker compose up -d --build`).
 
 **Steps:**
-- [ ] Step 1: Write the three files.
-- [ ] Step 2: Verify - Run: `bun -e "for (const f of ['compose.yaml','.github/workflows/ci.yml']) Bun.YAML.parse(await Bun.file(f).text())"` - Expected: exits 0 (both files parse).
-- [ ] Step 3: Commit - `git commit -m "feat(deploy): add compose, host nginx vhost and ci"`
+- [x] Step 1: Write the three files.
+> Deviation: compose omits a `healthcheck` key on purpose; Compose inherits the image's HEALTHCHECK, so there is one source of truth. Host vhost ships the brotli directives commented out with the module guard comment, because an active `brotli on;` makes stock nginx refuse to start; it also adds an ACME webroot location on port 80 and assumes the certificate covers `www.theerakarnm.dev`. CI pins `actions/checkout@v7`, `oven-sh/setup-bun@v2` (bun 1.3.5); `bun run check:seo` needs `scripts/check-dist.ts` from Track C and is red until that merges.
+- [x] Step 2: Verify - Run: `bun -e "for (const f of ['compose.yaml','.github/workflows/ci.yml']) Bun.YAML.parse(await Bun.file(f).text())"` - Expected: exits 0 (both files parse).
+- [x] Step 3: Commit - `git commit -m "feat(deploy): add compose, host nginx vhost and ci"`
 
 ---
 
