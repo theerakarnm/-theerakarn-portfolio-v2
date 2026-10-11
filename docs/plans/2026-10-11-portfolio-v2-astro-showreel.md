@@ -394,9 +394,13 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 **Gotcha:** The page uses inline `style=` attributes and Astro inline scripts may be emitted; the CSP must include `style-src 'self' 'unsafe-inline'` and a script policy that matches what `dist/index.html` actually contains. Check `rg "<script" dist/index.html` and pick `script-src 'self'` only if no inline script is emitted; otherwise add the specific `sha256-` hashes or set `inlineStylesheets`/script bundling so none are inline. Do not use `'unsafe-inline'` for scripts.
 
 **Steps:**
-- [ ] Step 1: Write the config. Add `src/pages/404.astro` is NOT part of this track; if `dist/404.html` does not exist, the `error_page` line is dropped and nginx's default 404 is used (no cross-track edits).
-- [ ] Step 2: Verify - Run: `rg -n "listen 8080|gzip_static|immutable|healthz|server_tokens off" deploy/nginx/default.conf` - Expected: all five present.
-- [ ] Step 3: Commit - `git commit -m "feat(deploy): add container nginx config"`
+- [x] Step 1: Write the config. Add `src/pages/404.astro` is NOT part of this track; if `dist/404.html` does not exist, the `error_page` line is dropped and nginx's default 404 is used (no cross-track edits).
+> Deviation: `dist/404.html` does not exist, so `error_page` is dropped (as the step allows).
+> Deviation: Cache-Control comes from a `map $uri` (immutable for `/_astro/` and `/fonts/`, `no-cache` otherwise) applied once at server level instead of per-location `add_header`, because a location-level `add_header` silently drops every server-level security header.
+> Deviation: `absolute_redirect off` added so directory redirects (`/en` -> `/en/`) do not leak the internal `:8080` port behind the host proxy.
+> Deviation: CSP written for the final design: `script-src 'self'` (Showreel's hoisted `<script>import ...</script>` bundles to an external `/_astro/*.js`; JSON-LD `application/ld+json` is a data block and is not subject to `script-src`). At this commit `dist/index.html` has no `<script>` at all (Showreel is a stub), so Track E must re-run `rg "<script" dist/index.html` after merge and confirm nothing executable is inline.
+- [x] Step 2: Verify - Run: `rg -n "listen 8080|gzip_static|immutable|healthz|server_tokens off" deploy/nginx/default.conf` - Expected: all five present.
+- [x] Step 3: Commit - `git commit -m "feat(deploy): add container nginx config"`
 
 #### Task 16: Production Dockerfile and pre-compression
 
