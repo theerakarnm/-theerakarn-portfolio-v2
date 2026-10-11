@@ -233,6 +233,17 @@ class Showreel {
     this.onScroll(true);
   }
 
+  /** Re-measure after a late layout change, such as fonts loading after init. */
+  relayout(): void {
+    if (!this.ready) return;
+    if (this.reduced) {
+      this.measure();
+      this.onScroll(true);
+    } else {
+      ScrollTrigger.refresh();
+    }
+  }
+
   private measure(): void {
     const y = window.scrollY;
     this.S = this.sections.map((s) => s.getBoundingClientRect().top + y);
@@ -647,6 +658,13 @@ export function startShowreel(root: HTMLElement): () => void {
     f.load('400 16px Anuphan', 'ก'),
     f.load('500 14px "IBM Plex Mono"'),
   ]);
+  let fontsLoaded = false;
+  loads.then(
+    () => {
+      fontsLoaded = true;
+    },
+    () => {},
+  );
   Promise.race([loads, new Promise((r) => setTimeout(r, 2500))])
     .catch(() => {})
     .then(() => {
@@ -655,6 +673,13 @@ export function startShowreel(root: HTMLElement): () => void {
         reel.init();
       } catch (e) {
         console.error('Showreel init failed', e);
+        return;
+      }
+      // Init ran with fallback fonts: measure again once the real ones arrive.
+      if (!fontsLoaded) {
+        f.ready.then(() => {
+          if (reel.alive) reel.relayout();
+        });
       }
     });
   return () => {
