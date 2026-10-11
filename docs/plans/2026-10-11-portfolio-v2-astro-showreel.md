@@ -489,9 +489,9 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 - Consumes: the real scripts and files from all tracks.
 
 **Steps:**
-- [ ] Step 1: Rewrite `README.md` (one sentence per line, no em dashes) with: what the project is and what the reference is; stack; scene map (9 scenes, heights); commands (`bun install`, `bun run dev`, `bun run build`, `bun run check`, `bun run test`, `bun run test:parity`, `bun run check:seo`, `bun run og`, `bun run extract-reference`); project layout; how to re-extract the reference; i18n routing (`/` TH, `/en/` EN, hreflang); SEO and AIEO section (name variants targeted, JSON-LD graph, `llms.txt`, `robots.txt` bot policy, sitemap, what to submit manually: Google Search Console and Bing Webmaster after first deploy); deploy section (Docker build, `docker compose up -d --build`, host nginx vhost install steps, certbot, how to update); performance targets; decisions and assumptions (constants, the completed EN sentence, no analytics).
-- [ ] Step 2: Verify - Run: `rg -n "TBD|TODO|\x{2014}" README.md` - Expected: no matches; `rg -c "bun run" README.md` at least 8.
-- [ ] Step 3: Commit - `git commit -m "docs: rewrite readme for the astro showreel"`
+- [x] Step 1: Rewrite `README.md` (one sentence per line, no em dashes) with: what the project is and what the reference is; stack; scene map (9 scenes, heights); commands (`bun install`, `bun run dev`, `bun run build`, `bun run check`, `bun run test`, `bun run test:parity`, `bun run check:seo`, `bun run og`, `bun run extract-reference`); project layout; how to re-extract the reference; i18n routing (`/` TH, `/en/` EN, hreflang); SEO and AIEO section (name variants targeted, JSON-LD graph, `llms.txt`, `robots.txt` bot policy, sitemap, what to submit manually: Google Search Console and Bing Webmaster after first deploy); deploy section (Docker build, `docker compose up -d --build`, host nginx vhost install steps, certbot, how to update); performance targets; decisions and assumptions (constants, the completed EN sentence, no analytics).
+- [x] Step 2: Verify - Run: `rg -n "TBD|TODO|\x{2014}" README.md` - Expected: no matches; `rg -c "bun run" README.md` at least 8.
+- [x] Step 3: Commit - `git commit -m "docs: rewrite readme for the astro showreel"`
 
 #### Task 19: Whole-site verification
 
