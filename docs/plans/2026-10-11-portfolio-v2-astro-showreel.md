@@ -123,10 +123,11 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 **Gotcha:** The bundle maps each `@font-face` `src: url("<uuid>")` to a manifest entry; Anuphan 400/500/700 may share one woff2 per subset (variable font), so de-duplicate by uuid. Weights 400/500/700 only. Name files from the `/* subset */` comment above each rule plus the family and weight.
 
 **Steps:**
-- [ ] Step 1: Write `scripts/extract-reference.ts`: read the HTML, regex out the three `<script type="__bundler/...">` blocks, `JSON.parse` the manifest and template, for entries with `compressed: true` `gunzipSync(Buffer.from(data,'base64'))`, write the `font/woff2` entries to `public/fonts/` under readable names, write `reference/template.html` from the template string, and write the inner text of the `<script type="text/x-dc" data-dc-script>` block to `reference/showreel.component.js`. Generate `src/styles/fonts.css` from the template's `<style>` `@font-face` blocks with each `url("<uuid>")` replaced by the new `/fonts/...` path.
-- [ ] Step 2: Run `bun run extract-reference`.
-- [ ] Step 3: Verify - Run: `ls public/fonts | wc -l; rg -c "@font-face" src/styles/fonts.css; rg -n "\x{2014}" src/styles` - Expected: at least 8 font files, a font-face count equal to the number of unique family/weight/subset rules in the template, and no em dash in `src/styles/` (`reference/` keeps the original copy verbatim and is excluded from this rule).
-- [ ] Step 4: Commit - `git commit -m "chore: unpack showreel reference and self-host fonts"`
+- [x] Step 1: Write `scripts/extract-reference.ts`: read the HTML, regex out the three `<script type="__bundler/...">` blocks, `JSON.parse` the manifest and template, for entries with `compressed: true` `gunzipSync(Buffer.from(data,'base64'))`, write the `font/woff2` entries to `public/fonts/` under readable names, write `reference/template.html` from the template string, and write the inner text of the `<script type="text/x-dc" data-dc-script>` block to `reference/showreel.component.js`. Generate `src/styles/fonts.css` from the template's `<style>` `@font-face` blocks with each `url("<uuid>")` replaced by the new `/fonts/...` path.
+      > Deviation: Anuphan 400/500/700 share one woff2 per subset, so each Anuphan file is named after the first weight seen (`anuphan-400-<subset>.woff2`) and all three weight rules point at it. IBM Plex Mono keeps every subset the template ships (including cyrillic, cyrillic-ext). The script runs `biome format --write` on the generated `fonts.css` so `bun run lint` stays at 0 errors.
+- [x] Step 2: Run `bun run extract-reference`.
+- [x] Step 3: Verify - Run: `ls public/fonts | wc -l; rg -c "@font-face" src/styles/fonts.css; rg -n "\x{2014}" src/styles` - Expected: at least 8 font files, a font-face count equal to the number of unique family/weight/subset rules in the template, and no em dash in `src/styles/` (`reference/` keeps the original copy verbatim and is excluded from this rule).
+- [x] Step 4: Commit - `git commit -m "chore: unpack showreel reference and self-host fonts"`
 
 #### Task 3: Content module and i18n helpers
 
