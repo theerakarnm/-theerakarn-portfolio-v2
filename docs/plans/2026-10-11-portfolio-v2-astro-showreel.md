@@ -309,9 +309,10 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
   Titles: TH `ธีรกานต์ ใหม่วงค์ (Theerakarn Maiwong) - Founder, CEO และ CTO Planthia Tech | Showreel`; EN `Theerakarn Maiwong (theerakarnm) - Founder, CEO & CTO of Planthia Tech | Showreel`. Descriptions start from the reference `<meta name="description">` and include the name variants naturally.
 
 **Steps:**
-- [ ] Step 1: In `Seo.astro` render: `<title>`, description, `<link rel="canonical">`, `<link rel="alternate" hreflang="th|en|x-default">`, `robots` (`index,follow,max-image-preview:large,max-snippet:-1`), `author`, `theme-color #F2EFE8`, `og:title/description/type=website/url/image(/og.png, 1200x630, with alt)/locale/locale:alternate/site_name`, `twitter:card=summary_large_image` plus title/description/image, `<link rel="icon" href="/favicon.svg" type="image/svg+xml">`, `<link rel="sitemap" href="/sitemap-index.xml">`, and `<link rel="preload" as="font" type="font/woff2" crossorigin>` for the one latin and one thai Anuphan 700 file only. Render JSON-LD via `<script type="application/ld+json" set:html={...} />` from Task 11 (import added there).
-- [ ] Step 2: Verify - Run: `bun run check && bun run build && rg -n 'rel="canonical"|hreflang|og:image' dist/index.html dist/en/index.html` - Expected: each file has one canonical, three alternates, one og:image.
-- [ ] Step 3: Commit - `git commit -m "feat(seo): add head metadata, canonical and hreflang"`
+- [x] Step 1: In `Seo.astro` render: `<title>`, description, `<link rel="canonical">`, `<link rel="alternate" hreflang="th|en|x-default">`, `robots` (`index,follow,max-image-preview:large,max-snippet:-1`), `author`, `theme-color #F2EFE8`, `og:title/description/type=website/url/image(/og.png, 1200x630, with alt)/locale/locale:alternate/site_name`, `twitter:card=summary_large_image` plus title/description/image, `<link rel="icon" href="/favicon.svg" type="image/svg+xml">`, `<link rel="sitemap" href="/sitemap-index.xml">`, and `<link rel="preload" as="font" type="font/woff2" crossorigin>` for the one latin and one thai Anuphan 700 file only. Render JSON-LD via `<script type="application/ld+json" set:html={...} />` from Task 11 (import added there).
+      > Deviation: Titles shortened to fit Task 14's 20-70 char bound (parent decision): TH `ธีรกานต์ ใหม่วงค์ (Theerakarn Maiwong) - ผู้ก่อตั้ง Planthia Tech`, EN `Theerakarn Maiwong (theerakarnm) - Founder & CEO, Planthia Tech`. JSON-LD script wiring moved to Task 11 so this commit builds. Anuphan 700 preloads point at `anuphan-400-latin.woff2` and `anuphan-400-thai.woff2` (one file serves all weights).
+- [x] Step 2: Verify - Run: `bun run check && bun run build && rg -n 'rel="canonical"|hreflang|og:image' dist/index.html dist/en/index.html` - Expected: each file has one canonical, three alternates, one og:image.
+- [x] Step 3: Commit - `git commit -m "feat(seo): add head metadata, canonical and hreflang"`
 
 #### Task 11: JSON-LD entity graph
 
@@ -330,10 +331,12 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 **Gotcha:** Do not invent facts (no birth data, no education, no awards, no phone). Only use values from `site.ts`. Do not add `Review` or `AggregateRating`. `alternateName` carries every spelling the owner wants to rank for.
 
 **Steps:**
-- [ ] Step 1: Write `tests/unit/jsonld.test.ts`: for both languages `JSON.stringify` parses back; the graph contains exactly one node with `@type` `Person` whose `alternateName` includes `Theerakarnm` and `ธีรกานต์ ใหม่วงค์` and whose `sameAs` has 3 URLs; every `@id` referenced (`worksFor`, `founder`, `mainEntity`) exists in the graph.
-- [ ] Step 2: Implement `jsonld.ts` and wire it into `Seo.astro`.
-- [ ] Step 3: Verify - Run: `bun run test` - Expected: all unit tests pass.
-- [ ] Step 4: Commit - `git commit -m "feat(seo): add schema.org person and organization graph"`
+- [x] Step 1: Write `tests/unit/jsonld.test.ts`: for both languages `JSON.stringify` parses back; the graph contains exactly one node with `@type` `Person` whose `alternateName` includes `Theerakarnm` and `ธีรกานต์ ใหม่วงค์` and whose `sameAs` has 3 URLs; every `@id` referenced (`worksFor`, `founder`, `mainEntity`) exists in the graph.
+      > Deviation: Test also follows `creator` and `publisher` references, not only `worksFor`/`founder`/`mainEntity`.
+- [x] Step 2: Implement `jsonld.ts` and wire it into `Seo.astro`.
+      > Deviation: `org.url` is empty, so the `Corporation` node omits `url`. Person `email` uses `mailto:` URIs; JSON in the script tag escapes `<` as `\u003c`.
+- [x] Step 3: Verify - Run: `bun run test` - Expected: all unit tests pass.
+- [x] Step 4: Commit - `git commit -m "feat(seo): add schema.org person and organization graph"`
 
 #### Task 12: robots.txt, llms.txt, llms-full.txt and sitemap
 
@@ -345,9 +348,11 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 - Produces: static endpoints. `robots.txt`: `User-agent: *` `Allow: /`; explicit `Allow: /` blocks for `GPTBot`, `OAI-SearchBot`, `ChatGPT-User`, `ClaudeBot`, `Claude-User`, `Claude-SearchBot`, `PerplexityBot`, `Perplexity-User`, `Google-Extended`, `Applebot-Extended`, `CCBot`; `Sitemap: https://theerakarnm.dev/sitemap-index.xml`. `llms.txt` follows the llms.txt convention (H1 name, blockquote summary, sections with links). `llms-full.txt` is a plain Markdown biography in English and Thai: who he is, name spellings ("also written Theerakarnm, theerakarnm, Theerakarn M., ธีรกานต์ ใหม่วงค์"), role, company, each project with URL and one-paragraph description, contact and profile links.
 
 **Steps:**
-- [ ] Step 1: Implement the three `GET` endpoints with `export const GET = () => new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } })`; build bodies from `site.ts` so facts are not duplicated.
-- [ ] Step 2: Verify - Run: `bun run build && ls dist/robots.txt dist/llms.txt dist/llms-full.txt dist/sitemap-index.xml dist/sitemap-0.xml && rg -c "xhtml:link" dist/sitemap-0.xml` - Expected: all files exist; sitemap contains hreflang alternates (count at least 2).
-- [ ] Step 3: Commit - `git commit -m "feat(aieo): add robots, llms.txt, llms-full.txt"`
+- [x] Step 1: Implement the three `GET` endpoints with `export const GET = () => new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } })`; build bodies from `site.ts` so facts are not duplicated.
+      > Deviation: Endpoints typed as `APIRoute`. Thai name spellings in `llms-full.txt` come from `person.alternateNames`; no fact is hardcoded outside `site.ts`.
+- [x] Step 2: Verify - Run: `bun run build && ls dist/robots.txt dist/llms.txt dist/llms-full.txt dist/sitemap-index.xml dist/sitemap-0.xml && rg -c "xhtml:link" dist/sitemap-0.xml` - Expected: all files exist; sitemap contains hreflang alternates (count at least 2).
+      > Deviation: `rg -c` counts lines and the sitemap is one minified line (prints 1); `rg -o xhtml:link dist/sitemap-0.xml | wc -l` prints 4 (th-TH + en-US on both URLs), which satisfies the intent.
+- [x] Step 3: Commit - `git commit -m "feat(aieo): add robots, llms.txt, llms-full.txt"`
 
 #### Task 13: Open Graph image
 
@@ -359,11 +364,12 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 - Produces: `public/og.png` 1200x630, paper background `#F2EFE8`, outlined `THEERAKARN MAIWONG` in Anuphan 700, role line in IBM Plex Mono, the riso four-circle mark. Committed to git so the build never needs a browser.
 
 **Steps:**
-- [ ] Step 1: Write the HTML template (inline CSS, `@font-face` pointing at `file://` paths of `public/fonts`), and `make-og.ts` which launches Playwright chromium at 1200x630, loads the template, waits `document.fonts.ready`, screenshots to `public/og.png`.
-- [ ] Step 2: Run `bun run og`.
-- [ ] Step 3: Verify - Manual: attach `public/og.png` with `attach_image` - Expected: readable name, no clipped text, correct fonts.
-- [ ] Step 4: Verify - Run: `file public/og.png` - Expected: `PNG image data, 1200 x 630`.
-- [ ] Step 5: Commit - `git commit -m "feat(seo): add open graph image"`
+- [x] Step 1: Write the HTML template (inline CSS, `@font-face` pointing at `file://` paths of `public/fonts`), and `make-og.ts` which launches Playwright chromium at 1200x630, loads the template, waits `document.fonts.ready`, screenshots to `public/og.png`.
+      > Deviation: `@font-face` uses paths relative to the template (`../public/fonts/...`), which resolve to `file://` URLs when Playwright loads the template from disk. Anuphan latin file serves 400-700. The four-circle mark is a 2x2 cluster of the four riso colours with `mix-blend-mode: multiply`. Playwright 1.64 needed `bunx playwright install chromium` (headless shell 1248).
+- [x] Step 2: Run `bun run og`.
+- [x] Step 3: Verify - Manual: attach `public/og.png` with `attach_image` - Expected: readable name, no clipped text, correct fonts.
+- [x] Step 4: Verify - Run: `file public/og.png` - Expected: `PNG image data, 1200 x 630`.
+- [x] Step 5: Commit - `git commit -m "feat(seo): add open graph image"`
 
 #### Task 14: Built-output SEO assertions
 
@@ -375,9 +381,12 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 - Produces: `bun run check:seo` exit 0 only when, for `dist/index.html` and `dist/en/index.html`: exactly one `<h1>`; exactly one `<title>` of 20-70 chars; description 70-180 chars; canonical equals the expected absolute URL; hreflang set is `th`, `en`, `x-default` and reciprocal; the JSON-LD block parses and has a `Person` with every alias; every `og:*`/`twitter:*` tag present and `og:image` URL resolves to a file in `dist/`; `<html lang>` matches; no `href` points at `localhost`; every internal `href` resolves to a file in `dist/`; `robots.txt` references the sitemap; the visible text of the page (HTML stripped, `aria-hidden` gap spaces included) contains `Theerakarn` and, for TH, `ธีรกานต์`.
 
 **Steps:**
-- [ ] Step 1: Implement with `node:fs` and a small regex/`cheerio`-free parser (HTML is generated, regex on tags is acceptable here); print one line per failing assertion.
+- [x] Step 1: Implement with `node:fs` and a small regex/`cheerio`-free parser (HTML is generated, regex on tags is acceptable here); print one line per failing assertion.
+      > Deviation: `bun scripts/check-dist.ts [distDir]` takes an optional dist directory (defaults to `dist/`) so the proxy run below can point at a patched copy. Visible text strips tags to `''` so char-split spans rejoin; the Latin `Theerakarn` match is case-insensitive (the `<h1>` is uppercase `THEERAKARN`).
 - [ ] Step 2: Verify - Run: `bun run build && bun run check:seo` - Expected: exit 0, and a negative control: temporarily delete the canonical link from `dist/index.html` and re-run - Expected: exit 1 naming the canonical assertion; then rebuild.
-- [ ] Step 3: Commit - `git commit -m "test(seo): add built-output seo assertions"`
+      > Deviation: Expected unsatisfiable at this task; errors confined to `src/components/Showreel.astro` (still the `<main>stub</main>` stub: no `<h1>`, no name in visible text), owned by Task 5 (Track B). Real `dist/` run: exit 1 with only those 5 lines (h1 x2, visible-text x3). Proxy: a copy of `dist/` with an injected `<h1>` holding the names passes (exit 0); negative control on both the copy and the real `dist/` (canonical deleted) exits 1 naming the canonical assertion; rebuilt afterwards.
+      > Deviation: the reference has no visible `ธีรกานต์` anywhere, so the TH visible-text assertion will stay red after Track B merges unless Track B/E renders the Thai name in the TH body.
+- [x] Step 3: Commit - `git commit -m "test(seo): add built-output seo assertions"`
 
 ---
 

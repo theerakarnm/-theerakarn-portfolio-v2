@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: 'Anuphan';
+        font-weight: 400 700;
+        src: url('../public/fonts/anuphan-400-latin.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'IBM Plex Mono';
+        font-weight: 400;
+        src: url('../public/fonts/ibm-plex-mono-400-latin.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'IBM Plex Mono';
+        font-weight: 500;
+        src: url('../public/fonts/ibm-plex-mono-500-latin.woff2') format('woff2');
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1200px; height: 630px; overflow: hidden; }
+      body {
+        position: relative;
+        background: #F2EFE8;
+        color: #111;
+        font-family: 'Anuphan', sans-serif;
+      }
+      .label {
+        position: absolute;
+        left: 64px;
+        top: 56px;
+        font-family: 'IBM Plex Mono', monospace;
+        font-weight: 500;
+        font-size: 18px;
+        letter-spacing: .24em;
+        text-transform: uppercase;
+      }
+      .mark {
+        position: absolute;
+        right: 64px;
+        top: 40px;
+        width: 176px;
+        height: 176px;
+      }
+      .mark circle { mix-blend-mode: multiply; }
+      h1 {
+        position: absolute;
+        left: 58px;
+        bottom: 128px;
+        font-weight: 700;
+        font-size: 150px;
+        line-height: .86;
+        letter-spacing: -.035em;
+        color: transparent;
+        -webkit-text-stroke: 2.5px #111;
+      }
+      h1 span { display: block; }
+      .role {
+        position: absolute;
+        left: 64px;
+        bottom: 60px;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 20px;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="label">Showreel - theerakarnm.dev</div>
+    <svg class="mark" viewBox="0 0 100 100" aria-hidden="true">
+      <circle cx="34" cy="34" r="27" fill="#F93427" />
+      <circle cx="66" cy="34" r="27" fill="#7C3AED" />
+      <circle cx="34" cy="66" r="27" fill="#E8702A" />
+      <circle cx="66" cy="66" r="27" fill="#1A57FF" />
+    </svg>
+    <h1><span>THEERAKARN</span><span>MAIWONG</span></h1>
+    <div class="role">Founder, CEO &amp; CTO - Planthia Tech Co., Ltd.</div>
+  </body>
+</html>
