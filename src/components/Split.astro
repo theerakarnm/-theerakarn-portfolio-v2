@@ -1,0 +1,20 @@
+---
+import { type SplitMode, splitText } from '../lib/split';
+
+interface Props {
+  text: string;
+  mode: SplitMode;
+  tag?: 'span' | 'h1' | 'h2' | 'p';
+}
+
+const { text, mode, tag: Tag = 'span' } = Astro.props;
+const normalized = text.replace(/\s+/g, ' ').trim();
+const tokens: { text: string; spaceAfter: boolean }[] = [];
+let cursor = 0;
+for (const segment of splitText(normalized, mode)) {
+  cursor = normalized.indexOf(segment, cursor) + segment.length;
+  tokens.push({ text: segment, spaceAfter: normalized[cursor] === ' ' });
+}
+---
+
+<Tag aria-label={normalized} data-split={mode}>{tokens.map((t) => t.spaceAfter ? (<Fragment><span data-w aria-hidden="true" style="display:inline-block;margin-right:0.3em">{t.text}</span><span aria-hidden="true" class="gap">{' '}</span></Fragment>) : (<span data-w aria-hidden="true" style="display:inline-block">{t.text}</span>))}</Tag>

@@ -1,0 +1,35 @@
+---
+import { type Lang, person } from '../../content/site';
+import Split from '../Split.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const th = lang === 'th';
+---
+
+<section id="s1" data-scene="1" data-h="260" data-m="190" data-screen-label="01 Premise" style="position:relative;height:260vh">
+<div data-stage style="position:sticky;top:0;height:100vh;overflow:hidden;background:#F2EFE8">
+  <div data-art style="position:absolute;right:6vw;top:14vh;width:clamp(240px,52vw,70vh);aspect-ratio:1">
+    <svg viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;mix-blend-mode:multiply">
+      <defs><pattern id="htK" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="1.5" cy="1.5" r=".9" fill="#111"></circle></pattern></defs>
+      <circle data-ht cx="50" cy="50" r="48" fill="url(#htK)"></circle>
+    </svg>
+    <div data-pplus style="position:absolute;left:36%;top:36%;width:28%;height:28%;mix-blend-mode:multiply">
+      <div style="position:absolute;left:0;top:41%;width:100%;height:18%;background:#111"></div>
+      <div style="position:absolute;top:0;left:41%;height:100%;width:18%;background:#111"></div>
+    </div>
+  </div>
+  <div data-pa style="position:absolute;left:4vw;top:15vh;font-weight:700;font-size:clamp(44px,14vw,250px);letter-spacing:-.035em;mix-blend-mode:multiply">
+    {th ? <span data-l={lang} style="display:block;line-height:1.15">กลยุทธ์</span> : <span data-l={lang} style="line-height:.88">STRATEGY</span>}
+  </div>
+  <div data-pb style="position:absolute;right:4vw;bottom:24vh;text-align:right;font-weight:700;font-size:clamp(44px,14vw,250px);letter-spacing:-.035em;color:transparent;-webkit-text-stroke:2px #111">
+    {th ? <span data-l={lang} style="display:block;line-height:1.15">ลงมือสร้าง</span> : <span data-l={lang} style="line-height:.88">DELIVERY</span>}
+  </div>
+  <p data-psub style="position:absolute;left:4vw;bottom:11vh;margin:0;max-width:min(46ch,88vw);font-family:'IBM Plex Mono',monospace;font-size:clamp(12px,1.05vw,15px);line-height:1.65;background:#F2EFE8">
+    <span data-l={lang}><Split mode="word" text={person.description[lang]} /></span>
+  </p>
+</div>
+</section>

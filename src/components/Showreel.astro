@@ -1,9 +1,18 @@
 ---
 import type { Lang } from '../content/site';
+import Chrome from './Chrome.astro';
+import Opening from './scenes/Opening.astro';
+import Premise from './scenes/Premise.astro';
 
 interface Props {
   lang: Lang;
 }
+
+const { lang } = Astro.props;
 ---
 
-<main>stub</main>
+<div data-root style="position:relative;font-family:'Anuphan',sans-serif;color:#111;background:#F2EFE8">
+  <Chrome lang={lang} />
+  <Opening lang={lang} />
+  <Premise lang={lang} />
+</div>

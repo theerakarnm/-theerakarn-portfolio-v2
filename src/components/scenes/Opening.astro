@@ -1,0 +1,28 @@
+---
+import type { Lang } from '../../content/site';
+import Split from '../Split.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const th = lang === 'th';
+---
+
+<section id="s0" data-scene="0" data-h="320" data-m="220" data-screen-label="00 Opening" style="position:relative;height:320vh">
+<div data-stage style="position:sticky;top:0;height:100vh;overflow:hidden;background:#F2EFE8">
+  <div data-hint style="position:absolute;left:0;right:0;top:44%;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.3em;text-transform:uppercase"><span data-l={lang}>{th ? 'เลื่อนเพื่อเล่น ↓' : 'Scroll to play ↓'}</span></div>
+  <div data-film style="position:absolute;left:4vw;right:4vw;top:40%;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:clamp(13px,1.3vw,18px);letter-spacing:.3em;text-transform:uppercase;opacity:0"><span data-l={lang}>{th ? 'Planthia Tech Co., Ltd. นำเสนอ' : 'Planthia Tech Co., Ltd. presents'}</span></div>
+  <div data-film style="position:absolute;left:4vw;right:4vw;top:40%;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:clamp(13px,1.3vw,18px);letter-spacing:.3em;text-transform:uppercase;opacity:0"><span data-l={lang}>{th ? 'โชว์รีลของคนสร้างโปรดักต์หนึ่งคน' : 'A showreel about one builder'}</span></div>
+  <div style="position:absolute;left:4vw;right:4vw;bottom:13vh;display:flex;flex-direction:column;gap:clamp(14px,2vw,28px)">
+    <h1 data-name style="margin:0;font-weight:700;font-size:clamp(50px,13.5vw,250px);line-height:.86;letter-spacing:-.035em;color:transparent;-webkit-text-stroke:1.5px #111">
+      <span data-name-line style="display:block"><Split text="THEERAKARN" mode="char" /></span>
+      <span data-name-line style="display:block"><Split text="MAIWONG" mode="char" /></span>
+    </h1>
+    <p data-role style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:clamp(12px,1.1vw,15px);letter-spacing:.06em;text-transform:uppercase;max-width:70ch;line-height:1.6">
+      <span data-l={lang}><Split mode="word" text={th ? 'ผู้ก่อตั้ง, CEO และ CTO - Planthia Tech Co., Ltd. · ที่ปรึกษาด้านเทคโนโลยีและนักสร้างโปรดักต์ฟูลสแตก' : 'Founder, CEO & CTO - Planthia Tech Co., Ltd. · Full-stack product builder & tech consultant'} /></span>
+    </p>
+  </div>
+</div>
+</section>
