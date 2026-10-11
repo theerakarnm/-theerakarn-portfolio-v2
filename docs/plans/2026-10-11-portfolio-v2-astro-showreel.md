@@ -302,10 +302,13 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 **Gotcha:** EN on the reference is selected by clicking `[data-lang-btn="en"]`; on the new site by navigating to `/en/`. The reference loads over `file://`: React/GSAP come from the bundled manifest so it works offline. Disable the page's own smooth scroll effects by waiting, not by editing the page. Particles and grain are deterministic (seeded); if a diff is dominated by grain, mask the grain element identically in both pages before screenshotting (`[data-grain]{display:none}`) and state this in the test.
 
 **Steps:**
-- [ ] Step 1: Write `playwright.config.ts` (chromium only, `webServer` runs `bunx astro dev --port 4401`, reuse existing server off).
-- [ ] Step 2: Write the spec with the matrix above.
-- [ ] Step 3: Verify - Run: `bun run test:parity` - Expected: all cases pass at the 1.5 percent threshold. On failure, open the diffs in `tests/parity/.out/`, fix the port (not the threshold), re-run. Record the achieved max diff percentage in the commit body.
-- [ ] Step 4: Commit - `git commit -m "test: add pixel parity test against showreel reference"`
+- [x] Step 1: Write `playwright.config.ts` (chromium only, `webServer` runs `bunx astro dev --port 4401`, reuse existing server off).
+      > Deviation: `workers: 1` and a 240 s test timeout so the two pages per case are not starved of CPU while their timelines settle.
+- [x] Step 2: Write the spec with the matrix above.
+      > Deviation: Masks, applied with `addStyleTag` and documented in the spec header: (a) the particle canvas is hidden in both pages because each particle drifts with wall-clock time (`Math.sin(t*.7+ph)*loose` in `draw`), so the plan's 'particles are deterministic' premise does not hold for pixels; particles are instead checked per scene by inked canvas pixel count (max 2 percent apart). (b) dashed `TODO` badges are hidden on the reference only (the port must not ship them). (c) the step 03 text column is `display:none!important` in both pages (reference TODO badge vs ASSUMED COPY; the extra height would shift the other steps). Grain needed no mask. Each viewport/language runs as one test that walks its scenes with `expect.soft`.
+- [x] Step 3: Verify - Run: `bun run test:parity` - Expected: all cases pass at the 1.5 percent threshold. On failure, open the diffs in `tests/parity/.out/`, fix the port (not the threshold), re-run. Record the achieved max diff percentage in the commit body.
+      > Deviation: `bun run test:parity`: 6 passed. Max screenshot diff 0.693 percent (`th-390-s3`), reduced-motion full page 0.087 percent TH / 0.100 percent EN; max particle ink-count gap 0.30 percent.
+- [x] Step 4: Commit - `git commit -m "test: add pixel parity test against showreel reference"`
 
 ---
 
