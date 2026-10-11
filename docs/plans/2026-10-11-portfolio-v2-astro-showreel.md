@@ -364,11 +364,12 @@ No existing pattern in this repo (it holds one commit and a one-line README). Es
 - Produces: `public/og.png` 1200x630, paper background `#F2EFE8`, outlined `THEERAKARN MAIWONG` in Anuphan 700, role line in IBM Plex Mono, the riso four-circle mark. Committed to git so the build never needs a browser.
 
 **Steps:**
-- [ ] Step 1: Write the HTML template (inline CSS, `@font-face` pointing at `file://` paths of `public/fonts`), and `make-og.ts` which launches Playwright chromium at 1200x630, loads the template, waits `document.fonts.ready`, screenshots to `public/og.png`.
-- [ ] Step 2: Run `bun run og`.
-- [ ] Step 3: Verify - Manual: attach `public/og.png` with `attach_image` - Expected: readable name, no clipped text, correct fonts.
-- [ ] Step 4: Verify - Run: `file public/og.png` - Expected: `PNG image data, 1200 x 630`.
-- [ ] Step 5: Commit - `git commit -m "feat(seo): add open graph image"`
+- [x] Step 1: Write the HTML template (inline CSS, `@font-face` pointing at `file://` paths of `public/fonts`), and `make-og.ts` which launches Playwright chromium at 1200x630, loads the template, waits `document.fonts.ready`, screenshots to `public/og.png`.
+      > Deviation: `@font-face` uses paths relative to the template (`../public/fonts/...`), which resolve to `file://` URLs when Playwright loads the template from disk. Anuphan latin file serves 400-700. The four-circle mark is a 2x2 cluster of the four riso colours with `mix-blend-mode: multiply`. Playwright 1.64 needed `bunx playwright install chromium` (headless shell 1248).
+- [x] Step 2: Run `bun run og`.
+- [x] Step 3: Verify - Manual: attach `public/og.png` with `attach_image` - Expected: readable name, no clipped text, correct fonts.
+- [x] Step 4: Verify - Run: `file public/og.png` - Expected: `PNG image data, 1200 x 630`.
+- [x] Step 5: Commit - `git commit -m "feat(seo): add open graph image"`
 
 #### Task 14: Built-output SEO assertions
 
