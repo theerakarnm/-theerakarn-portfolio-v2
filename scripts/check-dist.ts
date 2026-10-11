@@ -233,6 +233,24 @@ if (!robots.includes(`Sitemap: ${SITE_URL}/sitemap-index.xml`)) {
   fail('robots.txt', 'does not reference the sitemap');
 }
 
+const sitemapPath = join(dist, 'sitemap-0.xml');
+const sitemap = existsSync(sitemapPath)
+  ? readFileSync(sitemapPath, 'utf8')
+  : '';
+const pageHreflangs = new Set(
+  [...alternatesByPage.values()].flatMap((alternates) =>
+    Object.keys(alternates),
+  ),
+);
+for (const match of sitemap.matchAll(/hreflang="([^"]*)"/g)) {
+  if (!pageHreflangs.has(match[1])) {
+    fail(
+      'sitemap-0.xml',
+      `hreflang "${match[1]}" differs from the page hreflang codes`,
+    );
+  }
+}
+
 if (failures.length > 0) {
   for (const line of failures) console.error(`FAIL ${line}`);
   process.exit(1);
